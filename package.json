@@ -17,10 +17,13 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "preact build",
-    "serve": "preact build && preact serve",
-    "dev": "preact watch",
-    "lint": "eslint src"
+    "build": "run-s build:preact build:assets",
+    "build:preact": "npx preact build",
+    "build:assets": "npx cpy 'assets/*' build/assets",
+    "serve": "run-s build serve:server",
+    "serve:server": "npx serve -p 8080 build/",
+    "dev": "npx preact watch",
+    "lint": "npx eslint src"
   },
   "eslintConfig": {
     "extends": "eslint-config-synacor"
@@ -29,10 +32,13 @@
     "build/*"
   ],
   "devDependencies": {
+    "cpy-cli": "^2.0.0",
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
     "if-env": "^1.0.0",
-    "preact-cli": "^3.0.0-rc.5"
+    "npm-run-all": "^4.1.5",
+    "preact-cli": "^3.0.0-rc.5",
+    "serve": "^11.1.0"
   },
   "dependencies": {
     "preact": "^8.5.2",

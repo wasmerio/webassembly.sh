@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@wasmer/wasm-terminal": "file:../wasmer-js/packages/wasm-terminal",
+    "normalize.css": "^8.0.1",
     "preact": "^8.5.2",
     "preact-compat": "^3.17.0",
     "preact-render-to-string": "^4.1.0"

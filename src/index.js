@@ -1,5 +1,6 @@
-import './style';
+import '../node_modules/normalize.css/normalize.css';
 import './assets/wasm-terminal/xterm.css';
+import './style';
 import { Component } from 'preact';
 import WasmTerminal from '@wasmer/wasm-terminal';
 
@@ -34,8 +35,11 @@ export default class App extends Component {
     // Let's bind our wasm terminal to it's container
     const containerElement = document.querySelector("#wasm-terminal");
     this.wasmTerminal.open(containerElement);
-    this.wasmTerminal.fit();
-    this.wasmTerminal.focus();
+
+    setTimeout(() => {
+      this.wasmTerminal.fit();
+      this.wasmTerminal.focus();
+    });
   }
 
   componentWillUnmount() {

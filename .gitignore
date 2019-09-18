@@ -1,6 +1,8 @@
 # Project
 build/
 src/assets/wasm-terminal
+#TODO Un-ignore the package lock once things are actually published on npm
+package-lock.json
 
 # System files
 .DS_Store

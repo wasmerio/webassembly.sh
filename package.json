@@ -20,8 +20,8 @@
     "build": "run-s build:wasm-terminal build:preact",
     "build:preact": "npx preact build --no-prerender",
     "build:wasm-terminal": "cpy 'node_modules/@wasmer/wasm-terminal/dist' src/assets/wasm-terminal",
-    "serve": "npx serve -p 8000 build/",
     "dev": "npx preact watch -p 8000",
+    "serve": "npx serve -p 8000 build/",
     "lint": "npx eslint src"
   },
   "eslintConfig": {

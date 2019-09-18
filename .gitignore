@@ -1,5 +1,6 @@
 # Project
 build/
+src/assets/wasm-terminal
 
 # System files
 .DS_Store

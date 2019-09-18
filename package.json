@@ -17,12 +17,12 @@
   "license": "MIT",
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "run-s build:preact build:assets",
-    "build:preact": "npx preact build",
-    "build:assets": "npx cpy 'assets/*' build/assets",
+    "build": "run-s build:wasm-terminal build:preact",
+    "build:preact": "npx preact build --no-prerender",
+    "build:wasm-terminal": "cpy 'node_modules/@wasmer/wasm-terminal/dist' src/assets/wasm-terminal",
     "serve": "run-s build serve:server",
-    "serve:server": "npx serve -p 8080 build/",
-    "dev": "npx preact watch",
+    "serve:server": "npx serve -p 8000 build/",
+    "dev": "npx preact watch -p 8000",
     "lint": "npx eslint src"
   },
   "eslintConfig": {
@@ -41,6 +41,7 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
+    "@wasmer/wasm-terminal": "file:../wasmer-js/packages/wasm-terminal",
     "preact": "^8.5.2",
     "preact-compat": "^3.17.0",
     "preact-render-to-string": "^4.1.0"

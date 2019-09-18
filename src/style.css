@@ -3,3 +3,8 @@ button {
   cursor: pointer;
 }
 
+#wasm-terminal, #wasm-terminal > .xterm, #wasm-terminal > .xterm-viewport, #wasm-terminal > .xterm-screen {
+  height: 100%;
+  width: 100%;
+}
+

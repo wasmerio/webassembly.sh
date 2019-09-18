@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+  <!--
+    WebAssembly Shell
+    See source code in: https://github.com/wasmerio/wasm-shell
+  -->
 	<head>
 		<meta charset="utf-8">
 		<title><% preact.title %></title>
@@ -27,10 +31,6 @@
         position: fixed;
         overflow-y: scroll;
         -webkit-overflow-scrolling: touch;
-      }
-
-      #wasm-terminal, #wasm-terminal > .xterm, #wasm-terminal > .xterm-viewport, #wasm-terminal > .xterm-screen {
-        height: 100%;
       }
     </style>
 		<% preact.headEnd %>

@@ -39,7 +39,7 @@ export default class App extends Component {
     setTimeout(() => {
       this.wasmTerminal.fit();
       this.wasmTerminal.focus();
-    });
+    }, 16);
   }
 
   componentWillUnmount() {

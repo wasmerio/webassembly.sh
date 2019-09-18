@@ -7,9 +7,36 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" type="text/css" href="/assets/wasm-terminal/xterm.css">
+    <style>
+      html, body {
+        font: 14px/1.21 "Times New Roman", Times, serif;
+        font-weight: 400;
+        margin: 0px;
+
+        height: 100%;
+        width: 100vw;
+        background-color: #000;
+      }
+
+      html {
+        overflow: hidden;
+      }
+
+      body {
+        position: fixed;
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #wasm-terminal, #wasm-terminal > .xterm, #wasm-terminal > .xterm-viewport, #wasm-terminal > .xterm-screen {
+        height: 100%;
+      }
+    </style>
 		<% preact.headEnd %>
 	</head>
 	<body>
+    <noscript>Please enable JavaScript to use the Wasm Shell.</noscript>
 		<% preact.bodyEnd %>
 	</body>
 </html>

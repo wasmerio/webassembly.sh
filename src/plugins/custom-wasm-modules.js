@@ -1,18 +1,16 @@
 import { WasmTerminalPlugin } from '@wasmer/wasm-terminal';
 
-const helpText = `
-ayye lmao
+const customWasmModuleUrls = {
+  qjs: "assets/wasm-modules/qjs.wasm",
+  duk: "assets/wasm-modules/duk.wasm"
+}
 
-`;
-
-const HelpPlugin = new WasmTerminalPlugin({
+const CustomWasmModulesPlugin = new WasmTerminalPlugin({
   beforeFetchCommand: (commandName) => {
-    if (commandName === 'help') {
-      return Promise.resolve(() => {
-        return helpText;
-      });
+    if (customWasmModuleUrls[commandName]) {
+      return Promise.resolve(customWasmModuleUrls[commandName]);
     }
   }
 });
 
-export default HelpPlugin;
+export default CustomWasmModulesPlugin;

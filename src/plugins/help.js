@@ -1,16 +1,15 @@
 
 import { WasmTerminalPlugin } from '@wasmer/wasm-terminal';
 
-const helpText = `
-ayye lmao
-
+const message = `
+Help
 `;
 
 const HelpPlugin = new WasmTerminalPlugin({
   beforeFetchCommand: (commandName) => {
     if (commandName === 'help') {
       return Promise.resolve(() => {
-        return helpText;
+        return message.replace(/\n\n/g, '\n \n');
       });
     }
   }

@@ -6,6 +6,9 @@ import WasmTerminal, {WasmTerminalPlugin} from '@wasmer/wasm-terminal';
 
 import WelcomeMessagePlugin from './plugins/welcome-message';
 import HelpPlugin from './plugins/help';
+import AboutPlugin from './plugins/about';
+import ListPlugin from './plugins/list';
+import CustomWasmModulesPlugin from './plugins/custom-wasm-modules';
 
 export default class App extends Component {
 
@@ -19,6 +22,9 @@ export default class App extends Component {
     });
     wasmTerminal.addPlugin(WelcomeMessagePlugin);
     wasmTerminal.addPlugin(HelpPlugin);
+    wasmTerminal.addPlugin(AboutPlugin);
+    wasmTerminal.addPlugin(ListPlugin);
+    wasmTerminal.addPlugin(CustomWasmModulesPlugin);
 
     this.resizing = false;
     this.wasmTerminal = wasmTerminal;

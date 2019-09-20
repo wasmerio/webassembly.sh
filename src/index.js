@@ -2,7 +2,13 @@ import '../node_modules/normalize.css/normalize.css';
 import './assets/wasm-terminal/xterm.css';
 import './style';
 import { Component } from 'preact';
-import WasmTerminal from '@wasmer/wasm-terminal';
+import WasmTerminal, {WasmTerminalPlugin} from '@wasmer/wasm-terminal';
+
+import WelcomeMessagePlugin from './plugins/welcome-message';
+import HelpPlugin from './plugins/help';
+import AboutPlugin from './plugins/about';
+import ListPlugin from './plugins/list';
+import CustomWasmModulesPlugin from './plugins/custom-wasm-modules';
 
 export default class App extends Component {
 
@@ -12,16 +18,13 @@ export default class App extends Component {
     const wasmTerminal = new WasmTerminal({
       wasmTransformerWasmUrl:
       "assets/wasm-terminal/wasm_transformer_bg.wasm",
-      processWorkerUrl: "/assets/wasm-terminal/process.worker.js",
-      additionalWasmCommands: {
-      },
-      callbackCommands: {
-        // Pass a command run with `hello`, that outputs the following to /dev/stdout
-        hello: (args, stdin) => {
-          return Promise.resolve(`Hello! Args: ${args}, stdin: ${stdin}`);
-        }
-      }
+      processWorkerUrl: "/assets/wasm-terminal/process.worker.js"
     });
+    wasmTerminal.addPlugin(WelcomeMessagePlugin);
+    wasmTerminal.addPlugin(HelpPlugin);
+    wasmTerminal.addPlugin(AboutPlugin);
+    wasmTerminal.addPlugin(ListPlugin);
+    wasmTerminal.addPlugin(CustomWasmModulesPlugin);
 
     this.resizing = false;
     this.wasmTerminal = wasmTerminal;
@@ -36,10 +39,25 @@ export default class App extends Component {
     const containerElement = document.querySelector("#wasm-terminal");
     this.wasmTerminal.open(containerElement);
 
-    setTimeout(() => {
-      this.wasmTerminal.fit();
-      this.wasmTerminal.focus();
-    }, 16);
+    // Xterm has this weird bug where it won' fit correctly
+    // Thus, create a watcher to force it to fit
+    // And stop watching once we fit to 90% height
+    const fitXtermOnLoadWatcher = () => {
+      const xtermScreen = document.querySelector(".xterm-screen");
+      const body = document.body;
+      if (xtermScreen) {
+        const xtermScreenHeight = xtermScreen.offsetHeight;
+        const bodyHeight = body.offsetHeight;
+        this.wasmTerminal.fit();
+        this.wasmTerminal.focus();
+        if (xtermScreenHeight / bodyHeight > 0.9) {
+          return;
+        }
+      }
+
+      setTimeout(() => fitXtermOnLoadWatcher(), 50);
+    };
+    fitXtermOnLoadWatcher();
   }
 
   componentWillUnmount() {

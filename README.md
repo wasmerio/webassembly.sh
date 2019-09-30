@@ -1,2 +1,2 @@
-# wasm-shell
-PWA for the wasm-shell
+# wasm-terminal
+PWA for the wasm-terminal

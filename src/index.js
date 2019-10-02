@@ -1,30 +1,39 @@
 import '../node_modules/normalize.css/normalize.css';
-import './assets/wasm-terminal/xterm.css';
+import '../node_modules/@wasmer/wasm-terminal/dist/xterm/xterm.css';
 import './style';
 import { Component } from 'preact';
-import WasmTerminal, {WasmTerminalPlugin} from '@wasmer/wasm-terminal';
-
-import WelcomeMessagePlugin from './plugins/welcome-message';
-import HelpPlugin from './plugins/help';
-import AboutPlugin from './plugins/about';
-import ListPlugin from './plugins/list';
-import CustomWasmModulesPlugin from './plugins/custom-wasm-modules';
+import WasmTerminal, { fetchCommandFromWAPM } from '@wasmer/wasm-terminal';
+import wasmInit, { lowerI64Imports } from "./assets/wasm-transformer";
 
 export default class App extends Component {
 
   constructor() {
     super();
 
+    // Let's write handler for the fetchCommand property of the WasmTerminal Config.
+    const fetchCommandHandler = async commandName => {
+      // Let's return a "CallbackCommand" if our command matches a special name
+      if (commandName === "callback-command") {
+        const callbackCommand = async (args, stdin) => {
+          return `Callback Command Working! Args: ${args}, stdin: ${stdin}`;
+        };
+        return callbackCommand;
+      }
+
+      // Let's fetch a wasm Binary from WAPM for the command name.
+      const wasmBinary = await fetchCommandFromWAPM(commandName);
+
+      // Initialize the Wasm Transformer, and use it to lower
+      // i64 imports from Wasi Modules, so that most Wasi modules
+      // Can run in a Javascript context.
+      await wasmInit('./assets/wasm-transformer/wasm_transformer_bg.wasm');
+      return lowerI64Imports(wasmBinary);
+    };
+
     const wasmTerminal = new WasmTerminal({
-      wasmTransformerWasmUrl:
-      "assets/wasm-terminal/wasm_transformer_bg.wasm",
-      processWorkerUrl: "/assets/wasm-terminal/process.worker.js"
+      processWorkerUrl: "./assets/wasm-terminal/process.worker.js",
+      fetchCommand: fetchCommandHandler
     });
-    wasmTerminal.addPlugin(WelcomeMessagePlugin);
-    wasmTerminal.addPlugin(HelpPlugin);
-    wasmTerminal.addPlugin(AboutPlugin);
-    wasmTerminal.addPlugin(ListPlugin);
-    wasmTerminal.addPlugin(CustomWasmModulesPlugin);
 
     this.resizing = false;
     this.wasmTerminal = wasmTerminal;

@@ -31,6 +31,7 @@
     "build/*"
   ],
   "devDependencies": {
+    "@babel/plugin-syntax-import-meta": "^7.2.0",
     "cpy-cli": "^2.0.0",
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
@@ -40,7 +41,9 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "file:../wasmer-js/packages/wasm-terminal",
+    "@babel/plugin-syntax-optional-chaining": "^7.2.0",
+    "@wasmer/wasm-terminal": "^0.1.0",
+    "@wasmer/wasm-transformer": "^0.1.0",
     "normalize.css": "^8.0.1",
     "preact": "^8.5.2",
     "preact-compat": "^3.17.0",

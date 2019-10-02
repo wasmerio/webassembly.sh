@@ -1,0 +1,48 @@
+{
+  "_from": "@wasmer/wasm-transformer",
+  "_id": "@wasmer/wasm-transformer@0.1.0",
+  "_inBundle": false,
+  "_integrity": "sha512-r66KdqWaB6XrUQLGoeEJ6rzC2H++Rv3AiXU/uX9TLf74xTts9tSuPILlDLYktlVnhflf/LDu2LS+iWCyhvHkAA==",
+  "_location": "/@wasmer/wasm-transformer",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "@wasmer/wasm-transformer",
+    "name": "@wasmer/wasm-transformer",
+    "escapedName": "@wasmer%2fwasm-transformer",
+    "scope": "@wasmer",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/",
+    "/@wasmer/wasm-terminal"
+  ],
+  "_resolved": "https://registry.npmjs.org/@wasmer/wasm-transformer/-/wasm-transformer-0.1.0.tgz",
+  "_shasum": "86b8ba8eaccab667f8992c7347ab34d2dd1eb7d7",
+  "_spec": "@wasmer/wasm-transformer",
+  "_where": "/Users/torch2424/Source/webassembly.sh",
+  "bundleDependencies": false,
+  "collaborators": [
+    "Aaron Turner <aaron@aaronthedev.com>"
+  ],
+  "deprecated": false,
+  "description": "Library to run transformations on WebAssembly binaries. 🦀♻️",
+  "files": [
+    "wasm_transformer_bg.wasm",
+    "wasm_transformer.js",
+    "wasm_transformer.d.ts"
+  ],
+  "gitHead": "78d80233e3b5c9848921e1430d358ec674bb1a29",
+  "module": "wasm_transformer.js",
+  "name": "@wasmer/wasm-transformer",
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": "false",
+  "types": "wasm_transformer.d.ts",
+  "version": "0.1.0"
+}

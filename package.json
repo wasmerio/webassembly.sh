@@ -41,7 +41,6 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@babel/plugin-syntax-optional-chaining": "^7.2.0",
     "@wasmer/wasm-terminal": "^0.1.0",
     "@wasmer/wasm-transformer": "^0.1.0",
     "normalize.css": "^8.0.1",

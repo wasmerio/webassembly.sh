@@ -4,6 +4,7 @@ import { Component } from 'preact';
 import WasmTerminal from '@wasmer/wasm-terminal';
 
 import fetchCommand from './functions/fetch-command/fetch-command';
+import { getWelcomeMessage } from './functions/fetch-command/custom-commands/welcome-message';
 
 export default class App extends Component {
 
@@ -26,6 +27,7 @@ export default class App extends Component {
   componentDidMount() {
     // Let's bind our wasm terminal to it's container
     const containerElement = document.querySelector("#wasm-terminal");
+    this.wasmTerminal.print(getWelcomeMessage());
     this.wasmTerminal.open(containerElement);
 
     // Xterm has this weird bug where it won' fit correctly

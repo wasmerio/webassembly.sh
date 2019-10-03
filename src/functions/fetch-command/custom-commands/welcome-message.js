@@ -1,5 +1,4 @@
-import { WasmTerminalPlugin } from '@wasmer/wasm-terminal';
-import packageJson from '../../package.json';
+import packageJson from '../../../../package.json';
 
 const reset = "\x1B[0m";
 const magenta = `${reset}\x1B[34;1m`;
@@ -49,9 +48,5 @@ ${boldAndUnderline}More Information:${reset}
 
 `;
 
-const WelcomeMessagePlugin = new WasmTerminalPlugin({
-  // Using replace to respect empty newlines
-  afterOpen: () => welcomeMessage.replace(/\n\n/g, '\n \n')
-});
+export const getWelcomeMessage = () => welcomeMessage.replace(/\n\n/g, '\n \n');
 
-export default WelcomeMessagePlugin;

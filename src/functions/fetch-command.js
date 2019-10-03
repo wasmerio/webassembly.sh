@@ -1,6 +1,6 @@
 // Function to be set to our fetchCommand in our WasmTerminal Config
 import { fetchCommandFromWAPM } from '@wasmer/wasm-terminal';
-import wasmInit, { lowerI64Imports } from "../../assets/wasm-transformer";
+import wasmInit, { lowerI64Imports } from "../assets/wasm-transformer";
 
 const callbackCommands = {
   callback: async (args, stdin) => {

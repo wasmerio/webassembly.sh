@@ -1,4 +1,4 @@
-import packageJson from '../../../../package.json';
+import packageJson from '../../../package.json';
 
 const reset = "\x1B[0m";
 const magenta = `${reset}\x1B[34;1m`;

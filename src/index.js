@@ -3,8 +3,8 @@ import './style';
 import { Component } from 'preact';
 import WasmTerminal from '@wasmer/wasm-terminal';
 
-import fetchCommand from './functions/fetch-command/fetch-command';
-import { getWelcomeMessage } from './functions/fetch-command/custom-commands/welcome-message';
+import fetchCommand from './functions/fetch-command';
+import { getWelcomeMessage } from './functions/custom-commands/welcome-message';
 
 export default class App extends Component {
 

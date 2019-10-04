@@ -137,8 +137,8 @@ Additional commands can be installed by:
   }
 
   async _installFromUrl(commandName, commandUrl) {
-    const response = fetch(commandUrl);
-    const buffer = response.arrayBuffer();
+    const response = await fetch(commandUrl);
+    const buffer = await response.arrayBuffer();
     const wasmBinary = new Uint8Array(buffer);
     this._installWasmBinary(commandName, wasmBinary);
     return wasmBinary;

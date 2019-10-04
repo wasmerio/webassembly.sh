@@ -1,4 +1,4 @@
-import packageJson from '../../../package.json';
+import packageJson from '../../../../package.json';
 
 const reset = "\x1B[0m";
 const magenta = `${reset}\x1B[34;1m`;
@@ -33,7 +33,7 @@ ${boldAndUnderline}Quick Start:${reset}
 
 * Try a command: \`cowsay hello\`.
 * Run a JS Engine in Wasm: \`qjs\`.
-* List commands: \`list\`. 
+* Manage Wasm modules: \`wasmman\`. 
 
 ${boldAndUnderline}Additional commands:${reset}
 
@@ -49,4 +49,5 @@ ${boldAndUnderline}More Information:${reset}
 `;
 
 export const getWelcomeMessage = () => welcomeMessage.replace(/\n\n/g, '\n \n');
-
+const welcome = async () => getWelcomeMessage();
+export default welcome;

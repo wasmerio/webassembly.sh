@@ -4,7 +4,7 @@ import { Component } from 'preact';
 import WasmTerminal from '@wasmer/wasm-terminal';
 
 import fetchCommand from './functions/fetch-command';
-import { getWelcomeMessage } from './functions/custom-commands/welcome-message';
+import { getWelcomeMessage } from './services/wasmman/callback-commands/welcome';
 
 export default class App extends Component {
 

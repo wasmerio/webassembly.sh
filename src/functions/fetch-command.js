@@ -1,20 +1,11 @@
 // Function to be set to our fetchCommand in our WasmTerminal Config
 import { fetchCommandFromWAPM } from '@wasmer/wasm-terminal';
 import wasmInit, { lowerI64Imports } from "../assets/wasm-transformer";
-
-const callbackCommands = {
-  callback: async (args, stdin) => {
-    return `Callback Command Working! Args: ${args}, stdin: ${stdin}`;
-  }
-};
-
-const customWasmModuleUrls = {
-  qjs: "assets/wasm-modules/qjs.wasm",
-  duk: "assets/wasm-modules/duk.wasm"
-};
+import WasmMan from '../services/wasmman/wasmman';
 
 const commandBinaryCache = {};
 let didInitWasmTransformer = false;
+const wasmMan = new WasmMan(commandBinaryCache);
 
 const fetchCommand = async (commandName) => {
 
@@ -23,22 +14,10 @@ const fetchCommand = async (commandName) => {
     return commandBinaryCache[commandName];
   }
 
-  const callbackCommand = callbackCommands[commandName];
-  if (callbackCommand) {
-    return callbackCommand;
-  }
+  const wasmManCommand = await wasmMan.getCommand(commandName);
 
-  // Look for binary commands
-  let wasmBinary = undefined;
-  
-  const commandUrl = customWasmModuleUrls[commandName];
-
-  if (commandUrl) {
-    const fetched = await fetch(commandUrl);
-    const buffer = await fetched.arrayBuffer();
-    wasmBinary = new Uint8Array(buffer);
-  } else {
-    wasmBinary = await fetchCommandFromWAPM(commandName);
+  if (typeof wasmManCommand === 'function') {
+    return wasmManCommand;
   }
 
   if (!didInitWasmTransformer) {
@@ -46,7 +25,7 @@ const fetchCommand = async (commandName) => {
     didInitWasmTransformer = true;
   }
 
-  const loweredBinary = lowerI64Imports(wasmBinary);
+  const loweredBinary = lowerI64Imports(wasmManCommand);
 
   // Cache the result
   commandBinaryCache[commandName] = loweredBinary;

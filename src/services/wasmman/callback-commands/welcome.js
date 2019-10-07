@@ -1,10 +1,5 @@
 import packageJson from '../../../../package.json';
-
-const reset = "\x1B[0m";
-const magenta = `${reset}\x1B[34;1m`;
-const bold = `${reset}\x1B[1m`;
-const underline = `${reset}\x1B[4m`;
-const boldAndUnderline = `${reset}\x1B[1m\x1B[4m`;
+import {reset, magenta, bold, underline, boldAndUnderline} from '../../../util/ansi';
 
 const wasmerAscii = `
 ${magenta}               ww            
@@ -26,13 +21,14 @@ ${magenta}           wwww
 ${reset}
 `;
 
-const welcomeMessage = `${bold}WebAssembly Shell${reset} v${packageJson.version}
-Powered by ${bold}wasmer-js${reset}.
+let welcomeMessage = `${bold}WebAssembly.sh${reset} v${packageJson.version}
+@wasmer/wasm-terminal v${packageJson.dependencies['@wasmer/wasm-terminal'].replace('^', '')}
+Powered by ${bold}Wasmer-JS${reset}.
 
 ${boldAndUnderline}Quick Start:${reset}
 
 • Try a command: \`cowsay hello\`.
-• Run a JS Engine in Wasm: \`qjs\`.
+• Run a JS Engine in Wasm: \`quickjs\`.
 • Manage Wasm modules: \`wasmman\`. 
 
 ${boldAndUnderline}Additional commands:${reset}
@@ -46,6 +42,15 @@ ${boldAndUnderline}More Information:${reset}
 • About the project: \`about\`
 
 `;
+
+if (window.SharedArrayBuffer === undefined) {
+  welcomeMessage += `
+${boldAndUnderline}Browser Compatibility:${reset}
+
+Your current browser does not support SharedArrayBuffer. It is reccomended that you switch to a browser that does support this feature, such as a Chromium based browser. Your browser should still support more simple WASI commands, but inifinitely looping commands can freeze your browser, and commands that require input will require a less desireable experience. Use the command "help" for more information. Either way, ${bold}we hope you enjoy Webassembly.sh!${reset}
+
+`;
+}
 
 export const getWelcomeMessage = () => welcomeMessage.replace(/\n\n/g, '\n \n');
 const welcome = async () => getWelcomeMessage();

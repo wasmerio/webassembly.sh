@@ -1,6 +1,8 @@
 // Wasm Module (Package) Manager for the shell
 import { fetchCommandFromWAPM } from '@wasmer/wasm-terminal';
 import welcome from './callback-commands/welcome';
+import about from './callback-commands/about';
+import help from './callback-commands/help';
 
 const customWasmModuleUrls = {
   qjs: "assets/wasm-modules/qjs.wasm",
@@ -15,7 +17,9 @@ export default class WasmMan {
         return `Callback Command Working! Args: ${args}, stdin: ${stdin}`;
       },
       wasmman: this._wasmManCallbackCommand.bind(this),
-      welcome
+      welcome,
+      about,
+      help
     };
     this.externalWasmBinaryCache = externalWasmBinaryCache;
 

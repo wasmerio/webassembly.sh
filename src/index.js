@@ -18,6 +18,7 @@ export default class App extends Component {
 
     this.resizing = false;
     this.wasmTerminal = wasmTerminal;
+    this.dropZone = undefined;
 
     if (window) {
       window.addEventListener('resize', this.onResize.bind(this));
@@ -49,6 +50,46 @@ export default class App extends Component {
       setTimeout(() => fitXtermOnLoadWatcher(), 50);
     };
     fitXtermOnLoadWatcher();
+
+    // Let's bind our dropzone
+    this.dropZone = document.querySelector('#drop-zone');
+    this.dropZone.addEventListener('dragenter', event => {
+      event.preventDefault();
+      if (!this.dropZone.classList.contains('fade')) {
+        this.dropZone.classList.add('fade');
+      }
+      this.dropZone.classList.add('active');
+    });
+    this.dropZone.addEventListener('dragover', event => {
+      event.preventDefault();
+    });
+    this.dropZone.addEventListener('dragleave', event => {
+      event.preventDefault();
+      this.dropZone.classList.remove('active');
+    });
+    this.dropZone.addEventListener('drop', event => {
+      console.log('yooo', event);
+      event.preventDefault();
+
+      // Remove the active class
+      this.dropZone.classList.remove('active');
+
+      if (event.dataTransfer.items) {
+        // Use DataTransferItemList interface to access the file(s)
+        for (var i = 0; i < event.dataTransfer.items.length; i++) {
+          // If dropped items aren't files, reject them
+          if (event.dataTransfer.items[i].kind === 'file') {
+            var file = event.dataTransfer.items[i].getAsFile();
+            console.log('... file[' + i + '].name = ' + file.name);
+          }
+        }
+      } else {
+        // Use DataTransfer interface to access the file(s)
+        for (var i = 0; i < event.dataTransfer.files.length; i++) {
+          console.log('... file[' + i + '].name = ' + event.dataTransfer.files[i].name);
+        }
+      }
+    }); 
   }
 
   componentWillUnmount() {
@@ -68,9 +109,14 @@ export default class App extends Component {
   }
 
 	render() {
-		return (
-			<main id="wasm-terminal">
-			</main>
+    return (
+      <div class="fullscreen">
+        <main id="wasm-terminal">
+        </main>
+        <div id="drop-zone">
+          <h1>Please drop a `.wasm` file.</h1>
+        </div>
+      </div>
 		);
 	}
 }

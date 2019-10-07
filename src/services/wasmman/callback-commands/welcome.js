@@ -3,6 +3,7 @@ import packageJson from '../../../../package.json';
 const reset = "\x1B[0m";
 const magenta = `${reset}\x1B[34;1m`;
 const bold = `${reset}\x1B[1m`;
+const underline = `${reset}\x1B[4m`;
 const boldAndUnderline = `${reset}\x1B[1m\x1B[4m`;
 
 const wasmerAscii = `
@@ -26,25 +27,23 @@ ${reset}
 `;
 
 const welcomeMessage = `${bold}WebAssembly Shell${reset} v${packageJson.version}
-
 Powered by ${bold}wasmer-js${reset}.
 
 ${boldAndUnderline}Quick Start:${reset}
 
-* Try a command: \`cowsay hello\`.
-* Run a JS Engine in Wasm: \`qjs\`.
-* Manage Wasm modules: \`wasmman\`. 
+• Try a command: \`cowsay hello\`.
+• Run a JS Engine in Wasm: \`qjs\`.
+• Manage Wasm modules: \`wasmman\`. 
 
 ${boldAndUnderline}Additional commands:${reset}
 
-Search for WASI modules, 
-on WAPM ( https://wapm.io ).
+All the commands published on WAPM with the WASI interface will be automatically available here
+${underline}https://wapm.io${reset}
 
 ${boldAndUnderline}More Information:${reset}
 
-* Usage information: \`help\`
-
-* About the project: \`about\`
+• Usage information: \`help\`
+• About the project: \`about\`
 
 `;
 

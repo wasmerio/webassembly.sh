@@ -25,9 +25,9 @@ ${bold}Browser Compatibility:${reset}
 
 Webassembly.sh is meant to be run on all modern browsers. However, it is HIGHLY suggested that you use a browser with support for SharedArrayBuffer. This is usually is a Chromium based browser. However, browsers that do NOT support SharedArrayBuffer may be able to run more simple WASI commands without and issue. Where the issues of not having support for SharedArrayBuffer are:
 
-* Infinitely looping commands will freeze the browser.
+• Infinitely looping commands will freeze the browser.
 
-* Commands that require input will use a less desirable User Experience path.
+• Commands that require input will use a less desirable User Experience path.
 
 The reason for this is due to the conflict between I/O and synchronous read/writes required by the WASI API. Thus, to run processes on a seperate thread in a WebWorker and support synchronous I/O requires SharedArrayBuffer. See the Browser Compatibility of @wasmer/wasm-terminal from Wasmer-JS for more information: https://github.com/wasmerio/wasmer-js/tree/master/packages/wasm-terminal#browser-compatibility
 

@@ -53,7 +53,7 @@ const WAPM_PACKAGE_QUERY = `query shellGetPackageQuery($name: String!, $version:
 }
 `;
 
-const STORAGE_KEY = 'WAPM';
+const STORAGE_KEY = 'WAPM_STORAGE';
 
 const execWapmQuery = async (query, variables) => {
   const fetchResponse = await fetch("https://registry.wapm.io/graphql", {
@@ -149,7 +149,7 @@ export default class WAPM {
     this.wapmCommands = {};
     for (let packageVersion of this.wapmInstalledPackages) {
       for (let command of packageVersion.commands) {
-        if (command.module.abi === "wasi") {
+          if (command.module.abi === "wasi") {
           let commandUrl = command.module.publicUrl;
           this.wapmCommands[command.command] = await this.fetchBinary(
             commandUrl
@@ -165,17 +165,19 @@ export default class WAPM {
     return this.cachedModules[binaryUrl];
   }
 
+  // Check if a command is cached
+  isCommandCached(commandName) {
+    const cachedCommand = this._getCachedCommand(commandName);
+    return cachedCommand !== undefined;
+  }
+
   // Get a command from the wapm manager
   async getCommand(commandName) {
 
-    if (this.callbackCommands[commandName]) {
-      return this.callbackCommands[commandName];
-    }
-    if (commandName in this.wapmCommands) {
-      return this.wapmCommands[commandName];
-    }
-    if (this.uploadedCommands[commandName]) {
-      return this.uploadedCommands[commandName];
+    // Check if the command was cached
+    const cachedCommand = this._getCachedCommand(commandName);
+    if (cachedCommand) {
+      return cachedCommand;
     }
 
     // Try to install from WAPM
@@ -219,6 +221,20 @@ export default class WAPM {
       cachedModules: this.cachedModules
     };
     await idbKeyval.set(STORAGE_KEY, wapmStorage);
+  }
+
+  _getCachedCommand(commandName) {
+    if (this.callbackCommands[commandName]) {
+      return this.callbackCommands[commandName];
+    }
+    if (commandName in this.wapmCommands) {
+      return this.wapmCommands[commandName];
+    }
+    if (this.uploadedCommands[commandName]) {
+      return this.uploadedCommands[commandName];
+    }
+
+    return undefined;
   }
 
   async _wapmCallbackCommand(args) {
@@ -346,12 +362,11 @@ Additional commands can be installed by:
     );
     if (wapmInstalledPackage) {
       wapmInstalledPackage = wapmInstalledPackage[0];
-    }
-    if (wapmInstalledPackage) {
       this.wapmInstalledPackages = this.wapmInstalledPackages.filter(
         installedPackage => installedPackage !== wapmInstalledPackage
       );
       await this.regenerateWAPMCommands();
+
       await this._syncToStorage();
       return `Package "${wapmInstalledPackage.package.displayName}" uninstalled successfully.`;
     }

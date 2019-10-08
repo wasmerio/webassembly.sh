@@ -24,12 +24,13 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  tex-align: center;
+  text-align: center;
 
   color: #FFF;
   background-color: rgba(0,0,0,0.75);
   opacity: 0;
-  
+
+  pointer-events: none;
   z-index: 3;
 }
 

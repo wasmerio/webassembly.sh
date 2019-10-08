@@ -53,6 +53,10 @@ export default class WasmMan {
     return await this._installFromWapm(commandName);
   }
 
+  installWasmBinary(commandName, wasmBinary) {
+    this.wasmBinaryCommands[commandName] = wasmBinary;
+  }
+
   async _wasmManCallbackCommand(args) {
     if (args.length === 1) {
       return this._help();
@@ -132,7 +136,7 @@ Additional commands can be installed by:
 
   async _installFromWapm(commandName) {
     const wasmBinary = await fetchCommandFromWAPM(commandName);
-    this._installWasmBinary(commandName, wasmBinary);
+    this.installWasmBinary(commandName, wasmBinary);
     return wasmBinary;
   }
 
@@ -140,7 +144,7 @@ Additional commands can be installed by:
     const response = await fetch(commandUrl);
     const buffer = await response.arrayBuffer();
     const wasmBinary = new Uint8Array(buffer);
-    this._installWasmBinary(commandName, wasmBinary);
+    this.installWasmBinary(commandName, wasmBinary);
     return wasmBinary;
   }
 
@@ -161,7 +165,7 @@ Additional commands can be installed by:
 
     const commandName = file.name.replace('.wasm', '');
 
-    this._installWasmBinary(commandName, wasmBinary);
+    this.installWasmBinary(commandName, wasmBinary);
     return commandName;
   }
 
@@ -169,9 +173,5 @@ Additional commands can be installed by:
     if (this.currentInstallResolver) {
       this.currentInstallResolver(event.target.files[0]);
     }
-  }
-
-  _installWasmBinary(commandName, wasmBinary) {
-    this.wasmBinaryCommands[commandName] = wasmBinary;
   }
 }

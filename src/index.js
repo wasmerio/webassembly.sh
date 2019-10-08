@@ -24,9 +24,9 @@ export default class App extends Component {
 
   constructor() {
     super();
-
+    
     const wasmTerminal = new WasmTerminal({
-      processWorkerUrl: "./assets/wasm-terminal/process.worker.js",
+      processWorkerUrl: "/assets/wasm-terminal/process.worker.js",
       fetchCommand: fetchCommand
     });
 

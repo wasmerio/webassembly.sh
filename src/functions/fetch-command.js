@@ -5,7 +5,7 @@ import WasmMan from '../services/wasmman/wasmman';
 
 const commandBinaryCache = {};
 let didInitWasmTransformer = false;
-const wasmMan = new WasmMan(commandBinaryCache);
+export const wasmMan = new WasmMan(commandBinaryCache);
 
 const fetchCommand = async (commandName) => {
 
@@ -35,3 +35,4 @@ const fetchCommand = async (commandName) => {
 };
 
 export default fetchCommand;
+

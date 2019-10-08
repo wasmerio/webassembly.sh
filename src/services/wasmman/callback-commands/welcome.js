@@ -34,6 +34,7 @@ ${boldAndUnderline}Quick Start:${reset}
 ${boldAndUnderline}Additional commands:${reset}
 
 All the commands published on WAPM (with WASI) will be automatically available in this shell.
+
 ${underline}https://wapm.io${reset}
 
 ${boldAndUnderline}More Information:${reset}

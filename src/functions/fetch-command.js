@@ -1,11 +1,10 @@
 // Function to be set to our fetchCommand in our WasmTerminal Config
-import { fetchCommandFromWAPM } from '@wasmer/wasm-terminal';
 import wasmInit, { lowerI64Imports } from "../assets/wasm-transformer";
-import WasmMan from '../services/wasmman/wasmman';
+import WAPM from '../services/wapm/wapm';
 
 const commandBinaryCache = {};
 let didInitWasmTransformer = false;
-export const wasmMan = new WasmMan(commandBinaryCache);
+export const wapm = new WAPM(commandBinaryCache);
 
 const fetchCommand = async (commandName) => {
 
@@ -14,10 +13,10 @@ const fetchCommand = async (commandName) => {
     return commandBinaryCache[commandName];
   }
 
-  const wasmManCommand = await wasmMan.getCommand(commandName);
+  const wapmCommand = await wapm.getCommand(commandName);
 
-  if (typeof wasmManCommand === 'function') {
-    return wasmManCommand;
+  if (typeof wapmCommand === 'function') {
+    return wapmCommand;
   }
 
   if (!didInitWasmTransformer) {
@@ -25,7 +24,7 @@ const fetchCommand = async (commandName) => {
     didInitWasmTransformer = true;
   }
 
-  const loweredBinary = lowerI64Imports(wasmManCommand);
+  const loweredBinary = lowerI64Imports(wapmCommand);
 
   // Cache the result
   commandBinaryCache[commandName] = loweredBinary;

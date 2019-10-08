@@ -5,8 +5,8 @@ import about from './callback-commands/about';
 import help from './callback-commands/help';
 
 const customWasmModuleUrls = {
-  qjs: "assets/wasm-modules/qjs.wasm",
-  duk: "assets/wasm-modules/duk.wasm"
+//   qjs: "assets/wasm-modules/qjs.wasm",
+//   duk: "assets/wasm-modules/duk.wasm"
 };
 
 export default class WasmMan {
@@ -84,18 +84,18 @@ export default class WasmMan {
 
   _help() {
     const helpMessage =
-`
-wasmman - The heroic command manager for webassembly.sh
+`wapm-cli lite (adapted for WebAssembly.sh)
+The Wasmer Engineering Team <engineering@wasmer.io>
+WebAssembly Package Manager CLI
 
-Usage:
+USAGE:
+    wapm <SUBCOMMAND>
 
-\`wasmman list\` - List installed commands 
-
-\`wasmman install\` - Install a local wasm module
-
-\`wasmman remove [command name]\` - Remove an installed wasm module
-
-`;
+SUBCOMMANDS:
+    list                           List the currently installed packages and their commands
+    install                        Install a package from Wapm
+    upload                         Install a local Wasm module
+    uninstall                      Uninstall a package`;
 
     return helpMessage.replace(/\n\n/g, '\n \n');
   }

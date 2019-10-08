@@ -3,8 +3,8 @@ import './style';
 import { Component } from 'preact';
 import WasmTerminal from '@wasmer/wasm-terminal';
 
-import fetchCommand, {wasmMan} from './functions/fetch-command';
-import { getWelcomeMessage } from './services/wasmman/callback-commands/welcome';
+import fetchCommand, {wapm} from './functions/fetch-command';
+import { getWelcomeMessage } from './services/wapm/callback-commands/welcome';
 
 const readFileAsBuffer = file => {
   const fileReader = new FileReader();
@@ -151,6 +151,6 @@ export default class App extends Component {
     const fileBuffer = await readFileAsBuffer (file);
     const fileBinary = new Uint8Array(fileBuffer);
 
-    wasmMan.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
+    wapm.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
   }
 }

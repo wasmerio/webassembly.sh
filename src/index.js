@@ -151,6 +151,6 @@ export default class App extends Component {
     const fileBuffer = await readFileAsBuffer (file);
     const fileBinary = new Uint8Array(fileBuffer);
 
-    wapm.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
+    await wapm.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
   }
 }

@@ -43,6 +43,7 @@
   "dependencies": {
     "@wasmer/wasm-terminal": "^0.1.0",
     "@wasmer/wasm-transformer": "^0.1.0",
+    "idb-keyval": "^3.2.0",
     "normalize.css": "^8.0.1",
     "preact": "^8.5.2",
     "preact-compat": "^3.17.0",

@@ -1,5 +1,7 @@
 // Wasm Module (Package) Manager for the shell
 import table from "text-table";
+import * as idbKeyval from 'idb-keyval';
+
 import welcome from "./callback-commands/welcome";
 import about from "./callback-commands/about";
 import help from "./callback-commands/help";
@@ -50,6 +52,8 @@ const WAPM_PACKAGE_QUERY = `query shellGetPackageQuery($name: String!, $version:
   }
 }
 `;
+
+const STORAGE_KEY = 'WAPM_STORAGE';
 
 const execWapmQuery = async (query, variables) => {
   const fetchResponse = await fetch("https://registry.wapm.io/graphql", {
@@ -112,11 +116,10 @@ export default class WAPM {
     this.wapmCommands = {};
     this.uploadedCommands = {};
     this.cachedModules = {};
+    // Launch off an update request to our storage
+    this._updateFromStorage();
 
     this.callbackCommands = {
-      // callback: async (args, stdin) => {
-      //   return `Callback Command Working! Args: ${args}, stdin: ${stdin}`;
-      // },
       wapm: this._wapmCallbackCommand.bind(this),
       welcome,
       about,
@@ -146,7 +149,7 @@ export default class WAPM {
     this.wapmCommands = {};
     for (let packageVersion of this.wapmInstalledPackages) {
       for (let command of packageVersion.commands) {
-        if (command.module.abi === "wasi") {
+          if (command.module.abi === "wasi") {
           let commandUrl = command.module.publicUrl;
           this.wapmCommands[command.command] = await this.fetchBinary(
             commandUrl
@@ -162,8 +165,65 @@ export default class WAPM {
     return this.cachedModules[binaryUrl];
   }
 
-  // Get a command from the wasm maanger
+  // Check if a command is cached
+  isCommandCached(commandName) {
+    const cachedCommand = this._getCachedCommand(commandName);
+    return cachedCommand !== undefined;
+  }
+
+  // Get a command from the wapm manager
   async getCommand(commandName) {
+
+    // Check if the command was cached
+    const cachedCommand = this._getCachedCommand(commandName);
+    if (cachedCommand) {
+      return cachedCommand;
+    }
+
+    // Try to install from WAPM
+    return await this._installFromWapmCommand(commandName);
+  }
+
+  async installWasmBinary(commandName, wasmBinary) {
+    this.uploadedCommands[commandName] = wasmBinary;
+    await this._syncToStorage();
+  }
+
+  async _updateFromStorage() {
+    const wapmStorage = await idbKeyval.get(STORAGE_KEY);
+
+    if (!wapmStorage) {
+      return;
+    }
+
+    if (wapmStorage.wapmInstalledPackages) {
+      this.wapmInstalledPackages = wapmStorage.wapmInstalledPackages;
+    }
+
+    if (wapmStorage.wapmCommands) {
+      this.wapmCommands = wapmStorage.wapmCommands
+    }
+
+    if (wapmStorage.uploadedCommands) {
+      this.uploadedCommands = wapmStorage.uploadedCommands;
+    }
+
+    if (wapmStorage.cachedModules) {
+      this.cachedModules = wapmStorage.cachedModules;
+    }
+  }
+
+  async _syncToStorage() {
+    const wapmStorage = {
+      wapmInstalledPackages: this.wapmInstalledPackages,
+      wapmCommands: this.wapmCommands,
+      uploadedCommands: this.uploadedCommands,
+      cachedModules: this.cachedModules
+    };
+    await idbKeyval.set(STORAGE_KEY, wapmStorage);
+  }
+
+  _getCachedCommand(commandName) {
     if (this.callbackCommands[commandName]) {
       return this.callbackCommands[commandName];
     }
@@ -174,12 +234,7 @@ export default class WAPM {
       return this.uploadedCommands[commandName];
     }
 
-    // Try to install from WAPM
-    return await this._installFromWapmCommand(commandName);
-  }
-
-  installWasmBinary(commandName, wasmBinary) {
-    this.uploadedCommands[commandName] = wasmBinary;
+    return undefined;
   }
 
   async _wapmCallbackCommand(args) {
@@ -228,9 +283,7 @@ SUBCOMMANDS:
     let packageModules = [];
     Object.keys(this.wapmInstalledPackages).forEach(key => {
       let _package = this.wapmInstalledPackages[key];
-      console.log(_package);
       _package.modules.forEach(mod => {
-        console.log("a");
         packageModules.push([
           _package.package.displayName,
           _package.version,
@@ -285,6 +338,7 @@ Additional commands can be installed by:
     );
     this.wapmInstalledPackages.push(_package);
     await this.regenerateWAPMCommands();
+    await this._syncToStorage();
     return `Package ${_package.package.displayName}@${_package.version} installed successfully!`;
   }
 
@@ -297,6 +351,7 @@ Additional commands can be installed by:
     // Uninstalling an uploaded command
     if (this.uploadedCommands[packageOrCommandName]) {
       delete this.uploadedCommands[packageOrCommandName];
+      await this._syncToStorage();
       return `Uploaded command "${packageOrCommandName}" uninstalled successfully.`;
     }
 
@@ -307,12 +362,12 @@ Additional commands can be installed by:
     );
     if (wapmInstalledPackage) {
       wapmInstalledPackage = wapmInstalledPackage[0];
-    }
-    if (wapmInstalledPackage) {
       this.wapmInstalledPackages = this.wapmInstalledPackages.filter(
         installedPackage => installedPackage !== wapmInstalledPackage
       );
       await this.regenerateWAPMCommands();
+
+      await this._syncToStorage();
       return `Package "${wapmInstalledPackage.package.displayName}" uninstalled successfully.`;
     }
 
@@ -325,6 +380,7 @@ Additional commands can be installed by:
       this.wapmInstalledPackages.push(wasmPackage);
     }
     await this.regenerateWAPMCommands();
+    await this._syncToStorage();
     return this.wapmCommands[commandName];
   }
 

@@ -9,7 +9,7 @@ export const wapm = new WAPM(commandBinaryCache);
 const fetchCommand = async (commandName) => {
 
   // Check the Cache
-  if (commandBinaryCache[commandName]) {
+  if (wapm.isCommandCached(commandName) && commandBinaryCache[commandName]) {
     return commandBinaryCache[commandName];
   }
 

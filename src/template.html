@@ -17,7 +17,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta name="mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="stylesheet" type="text/css" href="assets/wasm-terminal/xterm.css">
+    <link rel="stylesheet" type="text/css" href="/assets/wasm-terminal/xterm.css">
     <style>
       html, body {
         font: 14px/1.21 "Times New Roman", Times, serif;
@@ -39,7 +39,15 @@
         overflow-y: scroll;
       }
     </style>
-		<% preact.headEnd %>
+    <% preact.headEnd %>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129663180-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-129663180-3');
+    </script>
 	</head>
 	<body>
     <noscript>Please enable JavaScript to use the Wasm Shell.</noscript>

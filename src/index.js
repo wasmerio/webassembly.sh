@@ -24,9 +24,9 @@ export default class App extends Component {
 
   constructor() {
     super();
-
+    
     const wasmTerminal = new WasmTerminal({
-      processWorkerUrl: "./assets/wasm-terminal/process.worker.js",
+      processWorkerUrl: "/assets/wasm-terminal/process.worker.js",
       fetchCommand: fetchCommand
     });
 
@@ -163,14 +163,18 @@ export default class App extends Component {
     const fileBuffer = await readFileAsBuffer (file);
     const fileBinary = new Uint8Array(fileBuffer);
 
-    await wapm.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
+    const commandName = file.name.replace('.wasm', '');
+    const response = await wapm.installWasmBinary(commandName, fileBinary);
+
+    this.wasmTerminal.print(`Module ${file.name} installed successfully!
+→ Installed commands: ${commandName}`);
   }
 
   _handleQueryParams() {
     const params = new URLSearchParams(window.location.search);
     if (params.has('run-command')) {
       const command = params.get('run-command');
-      console.log('TODO: wasmTerminal.runCommand', command);
+      this.wasmTerminal.runCommand(command);
     }
   }
 }

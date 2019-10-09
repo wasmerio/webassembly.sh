@@ -166,12 +166,8 @@ export default class App extends Component {
     const commandName = file.name.replace('.wasm', '');
     const response = await wapm.installWasmBinary(commandName, fileBinary);
 
-    this.wasmTerminal.print(`Installed ${file.name}!
-
-You can now use the module by running: '${commandName}'.
-
-View all available commands by running: 'wapm list'.
-`);
+    this.wasmTerminal.print(`Module ${file.name} installed successfully!
+→ Installed commands: ${commandName}`);
   }
 
   _handleQueryParams() {

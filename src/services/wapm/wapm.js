@@ -244,12 +244,8 @@ export default class WAPM {
 
     if (args[1] === "upload") {
       const commandName = await this._installFromFile();
-      const uploadMessage = `Installed ${commandName}!
-
-You can now use the module by running: '${commandName}'.
-
-View all available commands by running: 'wapm list'.
-`;
+      const uploadMessage = `Module ${commandName}.wasm installed successfully!
+→ Installed commands: ${commandName}`;
       return uploadMessage.replace(/\n\n/g, "\n \n");
     }
 
@@ -345,7 +341,8 @@ Additional commands can be installed by:
     this.wapmInstalledPackages.push(_package);
     await this.regenerateWAPMCommands();
     await this._syncToStorage();
-    return `Package ${_package.package.displayName}@${_package.version} installed successfully!`;
+    return `Package ${_package.package.displayName}@${_package.version} installed successfully!
+→ Installed commands: ${_package.commands.map(command => command.command).join(', ')}`;
   }
 
   async _uninstall(packageOrCommandName) {

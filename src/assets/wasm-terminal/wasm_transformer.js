@@ -11,10 +11,7 @@ function getInt32Memory() {
   return cachegetInt32Memory;
 }
 
-let cachedTextDecoder = new TextDecoder("utf-8", {
-  ignoreBOM: true,
-  fatal: true
-});
+let cachedTextDecoder = new TextDecoder("utf-8");
 
 let cachegetUint8Memory = null;
 function getUint8Memory() {
@@ -81,7 +78,7 @@ export function lowerI64Imports(wasm_binary) {
 
 function init(module) {
   if (typeof module === "undefined") {
-    // module = import.meta.url.replace(/\.js$/, "_bg.wasm");
+    module = import.meta.url.replace(/\.js$/, "_bg.wasm");
   }
   let result;
   const imports = {};

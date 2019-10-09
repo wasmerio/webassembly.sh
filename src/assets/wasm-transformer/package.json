@@ -1,29 +1,27 @@
 {
-  "_from": "@wasmer/wasm-transformer",
-  "_id": "@wasmer/wasm-transformer@0.1.0",
+  "_from": "@wasmer/wasm-transformer@^0.2.0",
+  "_id": "@wasmer/wasm-transformer@0.2.0",
   "_inBundle": false,
-  "_integrity": "sha512-r66KdqWaB6XrUQLGoeEJ6rzC2H++Rv3AiXU/uX9TLf74xTts9tSuPILlDLYktlVnhflf/LDu2LS+iWCyhvHkAA==",
+  "_integrity": "sha512-a7zaceIViAG319IYCOSy4v11+s1voYxBFn3QQxQO/cN3yfXGUfAmpVf3nGtWz4XvcAC3hhUKMaRdd5DERQqRFA==",
   "_location": "/@wasmer/wasm-transformer",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "@wasmer/wasm-transformer",
+    "raw": "@wasmer/wasm-transformer@^0.2.0",
     "name": "@wasmer/wasm-transformer",
     "escapedName": "@wasmer%2fwasm-transformer",
     "scope": "@wasmer",
-    "rawSpec": "",
+    "rawSpec": "^0.2.0",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^0.2.0"
   },
   "_requiredBy": [
-    "#USER",
-    "/",
-    "/@wasmer/wasm-terminal"
+    "/"
   ],
-  "_resolved": "https://registry.npmjs.org/@wasmer/wasm-transformer/-/wasm-transformer-0.1.0.tgz",
-  "_shasum": "86b8ba8eaccab667f8992c7347ab34d2dd1eb7d7",
-  "_spec": "@wasmer/wasm-transformer",
+  "_resolved": "https://registry.npmjs.org/@wasmer/wasm-transformer/-/wasm-transformer-0.2.0.tgz",
+  "_shasum": "f0daf4ca48704b509df63c7b9037e37987501d6b",
+  "_spec": "@wasmer/wasm-transformer@^0.2.0",
   "_where": "/Users/torch2424/Source/webassembly.sh",
   "bundleDependencies": false,
   "collaborators": [
@@ -36,7 +34,7 @@
     "wasm_transformer.js",
     "wasm_transformer.d.ts"
   ],
-  "gitHead": "78d80233e3b5c9848921e1430d358ec674bb1a29",
+  "gitHead": "665bb3490ecbc74f69c413e9b104a29a8e97ca3f",
   "module": "wasm_transformer.js",
   "name": "@wasmer/wasm-transformer",
   "publishConfig": {
@@ -44,5 +42,5 @@
   },
   "sideEffects": "false",
   "types": "wasm_transformer.d.ts",
-  "version": "0.1.0"
+  "version": "0.2.0"
 }

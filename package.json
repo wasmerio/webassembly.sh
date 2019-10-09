@@ -16,10 +16,13 @@
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run -s serve || npm run -s dev",
-    "build": "run-s build:wasm-terminal build:preact",
+    "postinstall": "npx run-s build:wasm-terminal build:wasm-transformer",
+    "build": "npx run-s build:wasm-terminal build:wasm-transformer build:preact",
     "build:preact": "npx preact build --no-prerender",
-    "build:wasm-terminal": "cpy 'node_modules/@wasmer/wasm-terminal/dist' src/assets/wasm-terminal",
+    "build:wasm-terminal": "npx cpy 'node_modules/@wasmer/wasm-terminal/dist' src/assets/wasm-terminal",
+    "build:wasm-transformer": "npx run-s wasm-transformer:copy wasm-transformer:replace",
+    "wasm-transformer:copy": "npx cpy 'node_modules/@wasmer/wasm-transformer' src/assets/wasm-transformer",
+    "wasm-transformer:replace": "npx replace 'module = import.meta.url.replace' '// module = import.meta.url.replace' src/assets/wasm-transformer/wasm_transformer.js",
     "dev": "npx preact watch -p 8000",
     "serve": "npx serve -p 8000 build/",
     "lint": "npx eslint src"
@@ -38,11 +41,12 @@
     "if-env": "^1.0.0",
     "npm-run-all": "^4.1.5",
     "preact-cli": "^3.0.0-rc.5",
+    "replace": "^1.1.1",
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "^0.1.0",
-    "@wasmer/wasm-transformer": "^0.1.0",
+    "@wasmer/wasm-terminal": "^0.2.0",
+    "@wasmer/wasm-transformer": "^0.2.0",
     "idb-keyval": "^3.2.0",
     "normalize.css": "^8.0.1",
     "preact": "^8.5.2",

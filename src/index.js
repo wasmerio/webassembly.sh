@@ -170,7 +170,7 @@ export default class App extends Component {
     const params = new URLSearchParams(window.location.search);
     if (params.has('run-command')) {
       const command = params.get('run-command');
-      console.log('TODO: wasmTerminal.runCommand', command);
+      this.wasmTerminal.runCommand(command);
     }
   }
 }

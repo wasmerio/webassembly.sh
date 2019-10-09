@@ -40,8 +40,12 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this._setupWasmTerminal();
-    this._setupDropZone();
+    const asyncTask = async () => {
+      await this._setupWasmTerminal();
+      this._setupDropZone();
+      this._handleQueryParams();
+    };
+    asyncTask();
   }
 
   componentWillUnmount() {
@@ -78,6 +82,11 @@ export default class App extends Component {
     this.wasmTerminal.print(getWelcomeMessage());
     this.wasmTerminal.open(containerElement);
 
+    let resolveOpenPromise = undefined;
+    const openedPromise = new Promise(resolve => {
+      resolveOpenPromise = resolve;
+    });
+
     // Xterm has this weird bug where it won' fit correctly
     // Thus, create a watcher to force it to fit
     // And stop watching once we fit to 90% height
@@ -90,6 +99,7 @@ export default class App extends Component {
         this.wasmTerminal.fit();
         this.wasmTerminal.focus();
         if (xtermScreenHeight / bodyHeight > 0.9) {
+          resolveOpenPromise();
           return;
         }
       }
@@ -97,6 +107,8 @@ export default class App extends Component {
       setTimeout(() => fitXtermOnLoadWatcher(), 50);
     };
     fitXtermOnLoadWatcher();
+
+    return openedPromise;
   }
 
   _setupDropZone() {
@@ -152,5 +164,13 @@ export default class App extends Component {
     const fileBinary = new Uint8Array(fileBuffer);
 
     await wapm.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
+  }
+
+  _handleQueryParams() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('run-command')) {
+      const command = params.get('run-command');
+      console.log('TODO: wasmTerminal.runCommand', command);
+    }
   }
 }

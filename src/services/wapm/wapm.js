@@ -244,7 +244,13 @@ export default class WAPM {
 
     if (args[1] === "upload") {
       const commandName = await this._installFromFile();
-      return `Installed ${commandName} ! Run it with: \`${commandName}\``;
+      const uploadMessage = `Installed ${commandName}!
+
+You can now use the module by running: '${commandName}'.
+
+View all available commands by running: 'wapm list'.
+`;
+      return uploadMessage.replace(/\n\n/g, "\n \n");
     }
 
     if (args[1] === "install" && args.length === 3) {

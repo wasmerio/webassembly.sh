@@ -1,5 +1,7 @@
 # Project
 build/
+assets/wasm-terminal
+assets/wasm-transformer
 #TODO Un-ignore the package lock once things are actually published on npm
 package-lock.json
 

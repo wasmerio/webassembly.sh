@@ -163,7 +163,15 @@ export default class App extends Component {
     const fileBuffer = await readFileAsBuffer (file);
     const fileBinary = new Uint8Array(fileBuffer);
 
-    await wapm.installWasmBinary(file.name.replace('.wasm', ''), fileBinary);
+    const commandName = file.name.replace('.wasm', '');
+    const response = await wapm.installWasmBinary(commandName, fileBinary);
+
+    this.wasmTerminal.print(`Installed ${file.name}!
+
+You can now use the module by running: '${commandName}'.
+
+View all available commands by running: 'wapm list'.
+`);
   }
 
   _handleQueryParams() {

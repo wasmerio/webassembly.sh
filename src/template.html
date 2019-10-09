@@ -39,7 +39,15 @@
         overflow-y: scroll;
       }
     </style>
-		<% preact.headEnd %>
+    <% preact.headEnd %>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129663180-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-129663180-3');
+    </script>
 	</head>
 	<body>
     <noscript>Please enable JavaScript to use the Wasm Shell.</noscript>

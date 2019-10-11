@@ -13,7 +13,7 @@
     "wasmerio",
     "wasmfs"
   ],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "scripts": {
     "postinstall": "npx run-s build:wasm-terminal build:wasm-transformer",
@@ -45,7 +45,7 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "^0.2.2",
+    "@wasmer/wasm-terminal": "^0.2.3",
     "@wasmer/wasm-transformer": "^0.2.0",
     "idb-keyval": "^3.2.0",
     "normalize.css": "^8.0.1",

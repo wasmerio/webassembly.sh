@@ -26,10 +26,13 @@ ${magenta}       wwwwwwww
 ${magenta}           wwww              
 ${reset}`;
 
+const wasmShVersion = packageJson.version;
+const wasmerWasmTerminalVersion = packageJson.dependencies['@wasmer/wasm-terminal'].replace('^', '');
+
 let welcomeMessage = `
-${bold}WebAssembly.sh${reset} v${packageJson.version}
+${bold}WebAssembly.sh${reset} v${wasmShVersion}
 Powered by Wasmer-JS
-    @wasmer/wasm-terminal v0.1.0
+    @wasmer/wasm-terminal v${wasmerWasmTerminalVersion}
 
 QUICK START:
     • Try a command: \`cowsay hello\`.

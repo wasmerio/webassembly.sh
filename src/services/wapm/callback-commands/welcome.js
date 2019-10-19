@@ -68,7 +68,7 @@ if (window.SharedArrayBuffer === undefined) {
 BROWSER COMPATIBILITY:
     Your current browser does not support SharedArrayBuffer.
     Your browser should still support more simple WASI commands, but:
-        • Inifinitely looping commands ${bold}can freeze your browser${reset}
+        • Infinitely looping commands ${bold}can freeze your browser${reset}
         • Commands that require input will have a worse UX (via prompt)
     Use the command "help" for more information.
 `;

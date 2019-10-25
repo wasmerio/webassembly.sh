@@ -1,5 +1,5 @@
 // Function to be set to our fetchCommand in our WasmTerminal Config
-import { lowerI64Imports } from "../assets/wasm-transformer/wasm-transformer.esm";
+import wasmInit, { lowerI64Imports } from "../../node_modules/@wasmer/wasm-transformer/dist/optimized/wasm-transformer.esm";
 import WAPM from '../services/wapm/wapm';
 
 const commandBinaryCache = {};
@@ -27,7 +27,7 @@ const fetchCommand = async (commandName) => {
   }
 
   if (!didInitWasmTransformer) {
-    await wasmInit('/assets/wasm-transformer/wasm_transformer_bg.wasm');
+    await wasmInit('/assets/wasm-transformer/wasm-transformer.wasm');
     didInitWasmTransformer = true;
   }
 

@@ -1,7 +1,7 @@
 import '../node_modules/normalize.css/normalize.css';
 import './style';
 import { Component } from 'preact';
-import WasmTerminal from '@wasmer/wasm-terminal';
+import WasmTerminal from '../node_modules/@wasmer/wasm-terminal/dist/optimized/wasm-terminal.esm';
 
 import fetchCommand, {wapm} from './functions/fetch-command';
 import { getWelcomeMessage } from './services/wapm/callback-commands/welcome';

@@ -65,7 +65,7 @@ workbox.precaching.precacheAndRoute(self.__precacheManifest, precacheOptions);
 // Precache some specific assets from our wasmer-js packages
 workbox.precaching.precacheAndRoute([
   '/assets/wasm-terminal/process.worker.js',
-  '/assets/wasm-transformer/wasm_transformer_bg.wasm'
+  '/assets/wasm-transformer/wasm-transformer.wasm'
 ]);
 
 workbox.routing.setCatchHandler(({ event }) => {

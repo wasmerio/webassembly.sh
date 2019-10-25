@@ -19,10 +19,10 @@
     "postinstall": "npx run-s build:wasm-terminal build:wasm-transformer",
     "build": "npx run-s build:wasm-terminal build:wasm-transformer build:preact",
     "build:preact": "npx preact build --no-prerender",
-    "build:wasm-terminal": "npx cpy 'node_modules/@wasmer/wasm-terminal/dist' src/assets/wasm-terminal",
-    "build:wasm-transformer": "npx run-s wasm-transformer:copy wasm-transformer:replace",
-    "wasm-transformer:copy": "npx cpy 'node_modules/@wasmer/wasm-transformer' src/assets/wasm-transformer",
-    "wasm-transformer:replace": "npx replace 'module = import.meta.url.replace' '// module = import.meta.url.replace' src/assets/wasm-transformer/wasm_transformer.js",
+    "build:wasm-terminal": "npx run-s build:wasm-terminal:xterm build:wasm-terminal:workers",
+    "build:wasm-terminal:xterm": "npx cpy 'node_modules/@wasmer/wasm-terminal/dist/xterm/**/*' src/assets/wasm-terminal",
+    "build:wasm-terminal:workers": "npx cpy 'node_modules/@wasmer/wasm-terminal/dist/workers/**/*' src/assets/wasm-terminal",
+    "build:wasm-transformer": "npx cpy 'node_modules/@wasmer/wasm-transformer/dist/wasm-transformer.wasm' src/assets/wasm-transformer",
     "dev": "npx preact watch -p 8000",
     "serve": "npx serve -p 8000 build/",
     "lint": "npx eslint src"
@@ -35,6 +35,7 @@
   ],
   "devDependencies": {
     "@babel/plugin-syntax-import-meta": "^7.2.0",
+    "copyfiles": "^2.1.1",
     "cpy-cli": "^2.0.0",
     "eslint": "^4.5.0",
     "eslint-config-synacor": "^1.1.0",
@@ -45,8 +46,8 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "^0.2.3",
-    "@wasmer/wasm-transformer": "^0.2.0",
+    "@wasmer/wasm-terminal": "^0.3.2",
+    "@wasmer/wasm-transformer": "^0.3.2",
     "idb-keyval": "^3.2.0",
     "normalize.css": "^8.0.1",
     "preact": "^8.5.2",

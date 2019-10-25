@@ -1,5 +1,5 @@
 // Function to be set to our fetchCommand in our WasmTerminal Config
-import wasmInit, { lowerI64Imports } from "../assets/wasm-transformer/wasm-transformer.esm";
+import { lowerI64Imports } from "../assets/wasm-transformer/wasm-transformer.esm";
 import WAPM from '../services/wapm/wapm';
 
 const commandBinaryCache = {};
@@ -31,7 +31,7 @@ const fetchCommand = async (commandName) => {
     didInitWasmTransformer = true;
   }
 
-  const loweredBinary = lowerI64Imports(wapmCommand);
+  const loweredBinary = await lowerI64Imports(wapmCommand);
 
   // Cache the result
   commandBinaryCache[commandName] = loweredBinary;

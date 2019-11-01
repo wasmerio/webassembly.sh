@@ -1,10 +1,11 @@
-import '../node_modules/normalize.css/normalize.css';
-import './style';
-import { Component } from 'preact';
-import WasmTerminal from '../node_modules/@wasmer/wasm-terminal/dist/optimized/wasm-terminal.esm';
+import "../node_modules/normalize.css/normalize.css";
+import "./style";
+import { Component } from "preact";
+// import WasmTerminal from "@wasmer/wasm-terminal";
+import WasmTerminal from '@wasmer/wasm-terminal/lib/optimized/wasm-terminal.esm';
 
-import fetchCommand, {wapm} from './functions/fetch-command';
-import { getWelcomeMessage } from './services/wapm/callback-commands/welcome';
+import fetchCommand, { wapm } from "./functions/fetch-command";
+import { getWelcomeMessage } from "./services/wapm/callback-commands/welcome";
 
 const readFileAsBuffer = file => {
   const fileReader = new FileReader();
@@ -12,30 +13,29 @@ const readFileAsBuffer = file => {
   return new Promise((resolve, reject) => {
     fileReader.onload = event => {
       resolve(event.target.result);
-    } 
+    };
     fileReader.onabout = () => {
       reject();
-    }
+    };
     fileReader.readAsArrayBuffer(file);
   });
-}
+};
 
 export default class App extends Component {
-
   constructor() {
     super();
-    
+
     const wasmTerminal = new WasmTerminal({
       processWorkerUrl: "/assets/wasm-terminal/process.worker.js",
-      fetchCommand: fetchCommand
+      fetchCommand: fetchCommand,
+      wasmFs: wapm.wasmFs,
     });
-
     this.resizing = false;
     this.wasmTerminal = wasmTerminal;
     this.dropZone = undefined;
 
     if (window) {
-      window.addEventListener('resize', this.onResize.bind(this));
+      window.addEventListener("resize", this.onResize.bind(this));
     }
   }
 
@@ -50,7 +50,7 @@ export default class App extends Component {
 
   componentWillUnmount() {
     if (window) {
-      window.removeEventListener('resize', this.onResize.bind(this));
+      window.removeEventListener("resize", this.onResize.bind(this));
     }
   }
 
@@ -64,16 +64,15 @@ export default class App extends Component {
     }
   }
 
-	render() {
+  render() {
     return (
       <div class="fullscreen">
-        <main id="wasm-terminal">
-        </main>
+        <main id="wasm-terminal"></main>
         <div id="drop-zone">
-          <h1>Please drop a `.wasm` file.</h1>
+          <h1>Please drop a `.wasm` module or any other asset.</h1>
         </div>
       </div>
-		);
+    );
   }
 
   _setupWasmTerminal() {
@@ -112,40 +111,40 @@ export default class App extends Component {
   }
 
   _setupDropZone() {
-    this.dropZone = document.querySelector('#drop-zone');
+    this.dropZone = document.querySelector("#drop-zone");
 
     // Handle the respective drag events, and prevent default to stop the browser from opening the file
-    document.body.addEventListener('dragenter', event => {
+    document.body.addEventListener("dragenter", event => {
       event.preventDefault();
-      if (!this.dropZone.classList.contains('fade')) {
-        this.dropZone.classList.add('fade');
+      if (!this.dropZone.classList.contains("fade")) {
+        this.dropZone.classList.add("fade");
       }
-      this.dropZone.classList.add('active');
+      this.dropZone.classList.add("active");
     });
-    document.body.addEventListener('dragover', event => {
+    document.body.addEventListener("dragover", event => {
       event.preventDefault();
-      if (!this.dropZone.classList.contains('active')) {
-        this.dropZone.classList.add('active');
+      if (!this.dropZone.classList.contains("active")) {
+        this.dropZone.classList.add("active");
       }
     });
-    document.body.addEventListener('dragleave', event => {
+    document.body.addEventListener("dragleave", event => {
       event.preventDefault();
-      this.dropZone.classList.remove('active');
+      this.dropZone.classList.remove("active");
     });
-    document.body.addEventListener('drop', event => {
+    document.body.addEventListener("drop", event => {
       event.preventDefault();
 
       // From MDN under Public Domain:
       // https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop
 
       // Remove the active class
-      this.dropZone.classList.remove('active');
+      this.dropZone.classList.remove("active");
 
       // Use DataTransferItemList interface to access the file(s)
       if (event.dataTransfer.items) {
         for (var i = 0; i < event.dataTransfer.items.length; i++) {
           // If dropped items aren't files, reject them
-          if (event.dataTransfer.items[i].kind === 'file') {
+          if (event.dataTransfer.items[i].kind === "file") {
             var file = event.dataTransfer.items[i].getAsFile();
             this._handleDropFile(file);
           }
@@ -156,24 +155,30 @@ export default class App extends Component {
           this._handleDropFile(event.dataTransfer.files[i]);
         }
       }
-    }); 
+    });
   }
 
   async _handleDropFile(file) {
-    const fileBuffer = await readFileAsBuffer (file);
+    const fileBuffer = await readFileAsBuffer(file);
     const fileBinary = new Uint8Array(fileBuffer);
 
-    const commandName = file.name.replace('.wasm', '');
-    const response = await wapm.installWasmBinary(commandName, fileBinary);
+    if (file.name.endsWith(".wasm")) {
+      const commandName = file.name.replace(".wasm", "");
+      const response = await wapm.installWasmBinary(commandName, fileBinary);
 
-    this.wasmTerminal.print(`Module ${file.name} installed successfully!
+      this.wasmTerminal.print(`Module ${file.name} installed successfully!
 → Installed commands: ${commandName}`);
+    } else {
+      wapm.wasmFs.volume.writeFileSync(`/tmp/${file.name}`, fileBinary);
+      this.wasmTerminal.print(`File uploaded successfully to /tmp
+→ /tmp/${file.name}`);
+    }
   }
 
   _handleQueryParams() {
     const params = new URLSearchParams(window.location.search);
-    if (params.has('run-command')) {
-      const command = params.get('run-command');
+    if (params.has("run-command")) {
+      const command = params.get("run-command");
       this.wasmTerminal.runCommand(command);
     }
   }

@@ -20,9 +20,9 @@
     "build": "npx run-s build:wasm-terminal build:wasm-transformer build:preact",
     "build:preact": "npx preact build --no-prerender",
     "build:wasm-terminal": "npx run-s build:wasm-terminal:xterm build:wasm-terminal:workers",
-    "build:wasm-terminal:xterm": "npx cpy 'node_modules/@wasmer/wasm-terminal/dist/xterm/**/*' src/assets/wasm-terminal",
-    "build:wasm-terminal:workers": "npx cpy 'node_modules/@wasmer/wasm-terminal/dist/workers/**/*' src/assets/wasm-terminal",
-    "build:wasm-transformer": "npx cpy 'node_modules/@wasmer/wasm-transformer/dist/wasm-transformer.wasm' src/assets/wasm-transformer",
+    "build:wasm-terminal:xterm": "npx cpy 'node_modules/@wasmer/wasm-terminal/lib/xterm/**/*' src/assets/wasm-terminal",
+    "build:wasm-terminal:workers": "npx cpy 'node_modules/@wasmer/wasm-terminal/lib/workers/**/*' src/assets/wasm-terminal",
+    "build:wasm-transformer": "npx cpy 'node_modules/@wasmer/wasm-transformer/lib/wasm-transformer.wasm' src/assets/wasm-transformer",
     "dev": "npx preact watch -p 8000",
     "serve": "npx serve -p 8000 build/",
     "lint": "npx eslint src"
@@ -46,13 +46,15 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "^0.3.2",
-    "@wasmer/wasm-transformer": "^0.3.2",
+    "@wasmer/wasm-terminal": "^0.4.4",
+    "@wasmer/wasm-transformer": "^0.4.4",
+    "@wasmer/wasmfs": "^0.4.4",
     "idb-keyval": "^3.2.0",
     "normalize.css": "^8.0.1",
     "preact": "^8.5.2",
     "preact-compat": "^3.17.0",
     "preact-render-to-string": "^4.1.0",
+    "save-file": "^2.3.1",
     "text-table": "^0.2.0"
   }
 }

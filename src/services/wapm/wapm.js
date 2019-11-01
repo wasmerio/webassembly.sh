@@ -1,10 +1,12 @@
 // Wasm Module (Package) Manager for the shell
 import table from "text-table";
 import * as idbKeyval from 'idb-keyval';
+import { WasmFs } from "@wasmer/wasmfs";
 
 import welcome from "./callback-commands/welcome";
 import about from "./callback-commands/about";
 import help from "./callback-commands/help";
+import download from "./callback-commands/download";
 
 const WAPM_COMMAND_GRAPHQL_QUERY = `query shellGetCommandQuery($command: String!) {
   command: getCommand(name: $command) {
@@ -116,14 +118,19 @@ export default class WAPM {
     this.wapmCommands = {};
     this.uploadedCommands = {};
     this.cachedModules = {};
+
+    this.wasmFs = new WasmFs();
+    // For the file uploads
+    this.wasmFs.fs.mkdirSync("/tmp/", { recursive: true });
+
     // Launch off an update request to our storage
     this._updateFromStorage();
-
     this.callbackCommands = {
       wapm: this._wapmCallbackCommand.bind(this),
       welcome,
       about,
       help,
+      download,
     };
     this.externalWasmBinaryCache = externalWasmBinaryCache;
 
@@ -173,7 +180,6 @@ export default class WAPM {
 
   // Get a command from the wapm manager
   async getCommand(commandName) {
-
     // Check if the command was cached
     const cachedCommand = this._getCachedCommand(commandName);
     if (cachedCommand) {

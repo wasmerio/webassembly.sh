@@ -26,6 +26,10 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="stylesheet" type="text/css" href="/assets/wasm-terminal/xterm.css">
     <style>
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+
       html, body {
         font: 14px/1.21 "Times New Roman", Times, serif;
         font-weight: 400;
@@ -43,7 +47,7 @@
 
       body {
         position: fixed;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
     </style>
     <% preact.headEnd %>

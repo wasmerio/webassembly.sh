@@ -1,5 +1,5 @@
 // Function to be set to our fetchCommand in our WasmTerminal Config
-import wasmInit, { lowerI64Imports } from "../../node_modules/@wasmer/wasm-transformer/dist/optimized/wasm-transformer.esm";
+import wasmInit, { lowerI64Imports } from "../../node_modules/@wasmer/wasm-transformer/lib/optimized/wasm-transformer.esm";
 import WAPM from '../services/wapm/wapm';
 
 const commandBinaryCache = {};
@@ -15,13 +15,7 @@ const fetchCommand = async (commandName) => {
     });
   }
   
-  // Check the Cache
-  if (wapm.isCommandCached(commandName) && commandBinaryCache[commandName]) {
-    return commandBinaryCache[commandName];
-  }
-
   const wapmCommand = await wapm.getCommand(commandName);
-
   if (typeof wapmCommand === 'function') {
     return wapmCommand;
   }

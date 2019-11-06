@@ -1,35 +1,35 @@
-import { wapm } from "../../../functions/fetch-command";
-import { save } from "save-file";
-
-function stringToUint(string) {
-  var charList = string.split(''),
-      uintArray = [];
-  for (var i = 0; i < charList.length; i++) {
-      uintArray.push(charList[i].charCodeAt(0));
-  }
-  return new Uint8Array(uintArray);
-}
+import { saveSync } from "save-file";
 
 
-const download = async (args, stdin) => {
-  const filepath = args[1];
+const download = async (options, wasmFs) => {
+  const filepath = options.args[1];
   let data, filename;
   try {
-    if (stdin) {
-      data = stringToUint(stdin);
-      console.log(data);
-      filename = filepath || "stdin";
-      return "a";
-    }
-    else if (filepath) {
-      data = wapm.wasmFs.volume.readFileSync(filepath);
+    if (filepath) {
+      data = wasmFs.volume.readFileSync(filepath);
       const splittedPath = filepath.split("/");
       filename = splittedPath[splittedPath.length - 1];
     }
     else {
-      throw new Error("You need to provide a filename or stdin");
+      // From stdin
+      var BUFSIZE=25600000;
+      let readData = new Uint8Array(BUFSIZE);
+      var bytesRead;
+      
+      let totalBytesRead = 0;
+      while (true) {
+          // let partialData = new Uint8Array(BUFSIZE);
+          bytesRead = wasmFs.fs.readSync(0, readData, 0, BUFSIZE, bytesRead);
+          // readData = readData.join(bytesRead)
+          totalBytesRead += bytesRead;
+          if (bytesRead === 0) {
+              break;
+          }
+      }
+      data = readData.slice(0, totalBytesRead);
+      filename = filepath || "stdin.txt";
     }
-    await save(data, filename);
+    saveSync(data, filename);
   }
   catch (e){
     return e.toString();

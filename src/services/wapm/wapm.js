@@ -243,7 +243,8 @@ export default class WAPM {
     return undefined;
   }
 
-  async _wapmCallbackCommand(args) {
+  async _wapmCallbackCommand(options) {
+    const args = options.args;
     if (args.length === 1) {
       return this._help();
     }

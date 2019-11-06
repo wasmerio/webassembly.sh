@@ -62,7 +62,23 @@ workbox.routing.registerRoute(
 
 workbox.precaching.precacheAndRoute(self.__precacheManifest, precacheOptions);
 
-// Precache some specific assets from our wasmer-js packages
+// Handle unversioned 3p assets, that preact-cli is not handling
+// First we want to register these assets with the NetworkFirst strategy.
+// Meaning they will be fetched from the network, if available, or from the cache if not
+// https://developers.google.com/web/tools/workbox/modules/workbox-strategies#network_first_network_falling_back_to_cache
+// https://developers.google.com/web/tools/workbox/modules/workbox-routing#how_to_register_a_regular_expression_route
+workbox.routing.registerRoute(
+  new RegExp('/assets/wasm-terminal.*'), 
+  new workbox.strategies.NetworkFirst()
+);
+workbox.routing.registerRoute(
+  new RegExp('/assets/wasm-transformer.*'), 
+  new workbox.strategies.NetworkFirst()
+);
+// Then, precache these assets as they are updated.
+// Since we already defined their routes, they will still follow the network first trategy
+// But be precached on initial load!
+// https://developers.google.com/web/tools/workbox/modules/workbox-precaching#serving_precached_responses
 workbox.precaching.precacheAndRoute([
   '/assets/wasm-terminal/process.worker.js',
   '/assets/wasm-transformer/wasm-transformer.wasm'

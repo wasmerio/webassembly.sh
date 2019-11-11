@@ -7,6 +7,7 @@ import welcome from "./callback-commands/welcome";
 import about from "./callback-commands/about";
 import help from "./callback-commands/help";
 import download from "./callback-commands/download";
+import curl from "./callback-commands/curl";
 
 const WAPM_COMMAND_GRAPHQL_QUERY = `query shellGetCommandQuery($command: String!) {
   command: getCommand(name: $command) {
@@ -131,6 +132,7 @@ export default class WAPM {
       about,
       help,
       download,
+      curl,
     };
     this.externalWasmBinaryCache = externalWasmBinaryCache;
 

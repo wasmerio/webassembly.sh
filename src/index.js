@@ -162,16 +162,16 @@ export default class App extends Component {
     const fileBuffer = await readFileAsBuffer(file);
     const fileBinary = new Uint8Array(fileBuffer);
 
+    wapm.wasmFs.volume.writeFileSync(`/tmp/${file.name}`, fileBinary);
+    this.wasmTerminal.print(`File uploaded successfully to /tmp
+→ /tmp/${file.name}`);
+
     if (file.name.endsWith(".wasm")) {
       const commandName = file.name.replace(".wasm", "");
-      const response = await wapm.installWasmBinary(commandName, fileBinary);
+      await wapm.installWasmBinary(commandName, fileBinary);
 
-      this.wasmTerminal.print(`Module ${file.name} installed successfully!
+      this.wasmTerminal.print(`WebAssembly file detected: ${file.name}
 → Installed commands: ${commandName}`);
-    } else {
-      wapm.wasmFs.volume.writeFileSync(`/tmp/${file.name}`, fileBinary);
-      this.wasmTerminal.print(`File uploaded successfully to /tmp
-→ /tmp/${file.name}`);
     }
   }
 

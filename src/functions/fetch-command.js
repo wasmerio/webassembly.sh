@@ -14,7 +14,13 @@ const fetchCommand = async (commandName) => {
       // 'value': '<here the command args and environment>'
     });
   }
-  
+
+  commandName = commandName.trim();
+  // We convert the `wapm run thecommand ...` to `thecommand ...`
+  if (commandName.startsWith("wapm run ")) {
+    commandName = commandName.substr(9)
+  }
+
   const wapmCommand = await wapm.getCommand(commandName);
   if (typeof wapmCommand === 'function') {
     return wapmCommand;

@@ -1,7 +1,10 @@
 // Wasm Module (Package) Manager for the shell
 import table from "text-table";
-import * as idbKeyval from 'idb-keyval';
+import * as idbKeyval from "idb-keyval";
 import { WasmFs } from "@wasmer/wasmfs";
+import { fetchCommandFromWAPM } from "./query";
+import { extractContents } from "@wasmer/wasmfs/lib/tar";
+import { lowerI64Imports } from "@wasmer/wasm-transformer";
 
 import welcome from "./callback-commands/welcome";
 import about from "./callback-commands/about";
@@ -9,29 +12,30 @@ import help from "./callback-commands/help";
 import download from "./callback-commands/download";
 import curl from "./callback-commands/curl";
 
-const WAPM_COMMAND_GRAPHQL_QUERY = `query shellGetCommandQuery($command: String!) {
-  command: getCommand(name: $command) {
-    packageVersion {
-      package {
-        displayName
-      }
-      modules {
-        name
-        publicUrl
-        abi
-      }
-      version
-      commands {
-        command
-        module {
-          name
-          publicUrl
-          abi
-        }
-      }
-    }
-  }
-}`;
+var COMPILED_MODULES = {};
+// const WAPM_COMMAND_GRAPHQL_QUERY = `query shellGetCommandQuery($command: String!) {
+//   command: getCommand(name: $command) {
+//     packageVersion {
+//       package {
+//         displayName
+//       }
+//       modules {
+//         name
+//         publicUrl
+//         abi
+//       }
+//       version
+//       commands {
+//         command
+//         module {
+//           name
+//           publicUrl
+//           abi
+//         }
+//       }
+//     }
+//   }
+// }`;
 
 const WAPM_PACKAGE_QUERY = `query shellGetPackageQuery($name: String!, $version: String) {
   packageVersion: getPackageVersion(name: $name, version: $version) {
@@ -56,7 +60,7 @@ const WAPM_PACKAGE_QUERY = `query shellGetPackageQuery($name: String!, $version:
 }
 `;
 
-const STORAGE_KEY = 'WAPM_STORAGE';
+const STORAGE_KEY = "WAPM_STORAGE";
 
 const execWapmQuery = async (query, variables) => {
   const fetchResponse = await fetch("https://registry.wapm.io/graphql", {
@@ -64,13 +68,13 @@ const execWapmQuery = async (query, variables) => {
     mode: "cors",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
       // operationName: "shellGetCommandQuery",
       query,
-      variables,
-    }),
+      variables
+    })
   });
   const response = await fetchResponse.json();
   if (response && response.data) {
@@ -78,16 +82,22 @@ const execWapmQuery = async (query, variables) => {
   }
 };
 
-const getWAPMPackageFromCommandName = async commandName => {
-  let data = await execWapmQuery(WAPM_COMMAND_GRAPHQL_QUERY, {
-    command: commandName,
-  });
-  if (data && data.command && data.command.packageVersion) {
-    return data.command.packageVersion;
-  } else {
-    throw new Error(`command not found ${commandName}`);
-  }
+const getBinaryFromUrl = async url => {
+  const fetched = await fetch(url);
+  const buffer = await fetched.arrayBuffer();
+  return new Uint8Array(buffer);
 };
+
+// const getWAPMPackageFromCommandName = async commandName => {
+//   let data = await execWapmQuery(WAPM_COMMAND_GRAPHQL_QUERY, {
+//     command: commandName,
+//   });
+//   if (data && data.command && data.command.packageVersion) {
+//     return data.command.packageVersion;
+//   } else {
+//     throw new Error(`command not found ${commandName}`);
+//   }
+// };
 
 const getWAPMPackageFromPackageName = async packageName => {
   let version;
@@ -98,7 +108,7 @@ const getWAPMPackageFromPackageName = async packageName => {
   }
   let data = await execWapmQuery(WAPM_PACKAGE_QUERY, {
     name: packageName,
-    version: version,
+    version: version
   });
   if (data && data.packageVersion) {
     return data.packageVersion;
@@ -132,7 +142,7 @@ export default class WAPM {
       about,
       help,
       download,
-      curl,
+      curl
     };
     this.externalWasmBinaryCache = externalWasmBinaryCache;
 
@@ -158,7 +168,7 @@ export default class WAPM {
     this.wapmCommands = {};
     for (let packageVersion of this.wapmInstalledPackages) {
       for (let command of packageVersion.commands) {
-          if (command.module.abi === "wasi") {
+        if (command.module.abi === "wasi") {
           let commandUrl = command.module.publicUrl;
           this.wapmCommands[command.command] = await this.fetchBinary(
             commandUrl
@@ -181,7 +191,8 @@ export default class WAPM {
   }
 
   // Get a command from the wapm manager
-  async getCommand(commandName) {
+  async getCommand(options) {
+    let commandName = options.args[0];
     // Check if the command was cached
     const cachedCommand = this._getCachedCommand(commandName);
     if (cachedCommand) {
@@ -189,7 +200,7 @@ export default class WAPM {
     }
 
     // Try to install from WAPM
-    return await this._installFromWapmCommand(commandName);
+    return await this._installFromWapmCommand(options);
   }
 
   async installWasmBinary(commandName, wasmBinary) {
@@ -209,7 +220,7 @@ export default class WAPM {
     }
 
     if (wapmStorage.wapmCommands) {
-      this.wapmCommands = wapmStorage.wapmCommands
+      this.wapmCommands = wapmStorage.wapmCommands;
     }
 
     if (wapmStorage.uploadedCommands) {
@@ -224,7 +235,6 @@ export default class WAPM {
   async _syncToStorage() {
     const wapmStorage = {
       wapmInstalledPackages: this.wapmInstalledPackages,
-      wapmCommands: this.wapmCommands,
       uploadedCommands: this.uploadedCommands,
       cachedModules: this.cachedModules
     };
@@ -234,9 +244,6 @@ export default class WAPM {
   _getCachedCommand(commandName) {
     if (this.callbackCommands[commandName]) {
       return this.callbackCommands[commandName];
-    }
-    if (commandName in this.wapmCommands) {
-      return this.wapmCommands[commandName];
     }
     if (this.uploadedCommands[commandName]) {
       return this.uploadedCommands[commandName];
@@ -299,7 +306,7 @@ SUBCOMMANDS:
           _package.package.displayName,
           _package.version,
           mod.name,
-          mod.abi,
+          mod.abi
         ]);
       });
     });
@@ -350,8 +357,12 @@ Additional commands can be installed by:
     this.wapmInstalledPackages.push(_package);
     await this.regenerateWAPMCommands();
     await this._syncToStorage();
-    return `Package ${_package.package.displayName}@${_package.version} installed successfully!
-→ Installed commands: ${_package.commands.map(command => command.command).join(', ')}`;
+    return `Package ${_package.package.displayName}@${
+      _package.version
+    } installed successfully!
+→ Installed commands: ${_package.commands
+      .map(command => command.command)
+      .join(", ")}`;
   }
 
   async _uninstall(packageOrCommandName) {
@@ -386,14 +397,69 @@ Additional commands can be installed by:
     return `Package "${packageOrCommandName}" is not installed.`;
   }
 
-  async _installFromWapmCommand(commandName) {
-    const wasmPackage = await getWAPMPackageFromCommandName(commandName);
-    if (wasmPackage) {
-      this.wapmInstalledPackages.push(wasmPackage);
+  async _installFromWapmCommand({ args, env }) {
+    let commandName = args[0];
+    // const wasmPackage = await getWAPMPackageFromCommandName(commandName);
+    // await this.regenerateWAPMCommands();
+    // await this._syncToStorage();
+    // return this.wapmCommands[commandName];
+    console.log("_installFromWapmCommand");
+    const binaryName = `/bin/${commandName}`;
+    if (!this.wasmFs.fs.existsSync(binaryName)) {
+      this.wasmFs.fs.mkdirpSync("/bin");
+      let command = await fetchCommandFromWAPM({args, env});
+
+      const packageUrl = command.packageVersion.distribution.downloadUrl;
+      let binary = await getBinaryFromUrl(packageUrl);
+    
+      const packageVersion = command.packageVersion;
+      const installedPath = `/_wasmer/wapm_packages/${packageVersion.package.name}@${packageVersion.version}`;
+      
+      // We extract the contents on the desired directory
+      await extractContents(this.wasmFs, binary, installedPath);
+      
+      const wasmFullPath = `${installedPath}/${command.module.source}`;
+      const filesystem = packageVersion.filesystem;
+      const wasmBinary = this.wasmFs.fs.readFileSync(wasmFullPath);
+      const loweredBinary = await lowerI64Imports(wasmBinary);
+      const loweredFullPath = `${wasmFullPath}.__lowered__`;
+      this.wasmFs.fs.writeFileSync(loweredFullPath, loweredBinary);
+      let preopens = {};
+      filesystem.forEach(({ wasm, host }) => {
+        preopens[wasm] = `${installedPath}/${host}`;
+      });
+      const mainFunction = new Function(`// wasi
+return function main(options) {
+var preopens = ${JSON.stringify(preopens)};
+return {
+  "args": options.args,
+  "env": options.env,
+  // We use the path for the lowered Wasm
+  "modulePath": ${JSON.stringify(loweredFullPath)},
+  "preopens": preopens,
+};
+}
+`)();
+      this.wasmFs.fs.writeFileSync(binaryName, mainFunction.toString());
     }
-    await this.regenerateWAPMCommands();
-    await this._syncToStorage();
-    return this.wapmCommands[commandName];
+    let fileContents = this.wasmFs.fs.readFileSync(binaryName, "utf8");
+    let mainProgram = new Function(`return ${fileContents}`)();
+    let program = mainProgram({args, env});
+    if (!(program.modulePath in COMPILED_MODULES)) {
+      let programContents;
+      try {
+        programContents = this.wasmFs.fs.readFileSync(program.modulePath);
+      } catch {
+        throw new Error(
+          `The lowered module ${program.modulePath} doesn't exist`
+        );
+      }
+      COMPILED_MODULES[program.modulePath] = Promise.resolve(
+        WebAssembly.compile(programContents)
+      );
+    }
+    program.module = await COMPILED_MODULES[program.modulePath];
+    return program;
   }
 
   async _installFromUrl(commandName, commandUrl) {

@@ -8,7 +8,7 @@ Open-source and installable Progressive Web App (PWA) terminal fully powered by 
 
 ## Contributing
 
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification.
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification.
 
 Also, please see our [Code of Conduct](./code-of-conduct.md).
 

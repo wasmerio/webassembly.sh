@@ -29,8 +29,8 @@ const WAPM_GRAPHQL_QUERY = `query shellGetCommandQuery($command: String!) {
         command
         module {
           name
-          publicUrl
           abi
+          source
         }
       }
     }
@@ -63,7 +63,7 @@ const getCommandFromWAPM = async (commandName) => {
 };
 
 export const fetchCommandFromWAPM = async ({args, env}) => {
-  const [commandName, ...commandArgs] = args;
+  const commandName = args[0];
   const command = await getCommandFromWAPM(commandName);
   if (command.module.abi !== "wasi") {
     throw new Error(

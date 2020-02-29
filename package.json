@@ -46,9 +46,9 @@
     "serve": "^11.1.0"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "^0.8.5",
-    "@wasmer/wasm-transformer": "^0.8.5",
-    "@wasmer/wasmfs": "^0.8.5",
+    "@wasmer/wasm-terminal": "^0.9.0",
+    "@wasmer/wasm-transformer": "^0.9.0",
+    "@wasmer/wasmfs": "^0.9.0",
     "idb-keyval": "^3.2.0",
     "normalize.css": "^8.0.1",
     "preact": "^8.5.2",

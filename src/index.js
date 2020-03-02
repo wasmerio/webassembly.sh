@@ -61,9 +61,15 @@ export default class App extends Component {
   
   componentDidMount() {
     const asyncTask = async () => {
-      await this._setupWasmTerminal();
+      let params = this._handleQueryParams();
+      await this._setupWasmTerminal(params.inline);
       this._setupDropZone();
-      this._handleQueryParams();
+      if (params.runCommand) {
+        // console.log(params.runCommand);
+        setTimeout(
+          () => this.wasmTerminal.runCommand(params.runCommand),
+        50);
+      }
     };
     asyncTask();
   }
@@ -95,10 +101,12 @@ export default class App extends Component {
     );
   }
 
-  _setupWasmTerminal() {
+  _setupWasmTerminal(isInline) {
     // Let's bind our wasm terminal to it's container
     const containerElement = document.querySelector("#wasm-terminal");
-    this.wasmTerminal.print(getWelcomeMessage());
+    if (!isInline) {
+      this.wasmTerminal.print(getWelcomeMessage());
+    }
     this.wasmTerminal.open(containerElement);
 
     let resolveOpenPromise = undefined;
@@ -197,9 +205,9 @@ export default class App extends Component {
 
   _handleQueryParams() {
     const params = new URLSearchParams(window.location.search);
-    if (params.has("run-command")) {
-      const command = params.get("run-command");
-      this.wasmTerminal.runCommand(command);
+    return {
+      runCommand: params.get("run-command"),
+      inline: params.has("inline"),
     }
   }
 }

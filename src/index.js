@@ -55,7 +55,7 @@ export default class App extends Component {
         'event_label': commandName,
         // 'value': '<here the command args and environment>'
       });
-    }  
+    }
     return await this.wapm.runCommand(options);
   };
   

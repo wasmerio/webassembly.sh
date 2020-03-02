@@ -200,10 +200,37 @@ export default class WAPM {
   // Get a command from the wapm manager
   async runCommand(options) {
     let commandName = options.args[0];
-    // We convert the `wapm run thecommand ...` to `thecommand ...`
-    if (commandName.startsWith("wapm run ")) {
-      commandName = commandName.substr(9)
+    
+    // We convert the `wasmer run thecommand ...` to `thecommand ...`
+    if (commandName == "wasmer") {
+      if (options.args[1] == "run") {
+        options.args = options.args.slice(2);
+      }
+      else {
+        options.args = options.args.slice(1)
+      }
+      commandName = options.args[0];
     }
+    else if (commandName == "wapm" && options.args[1] == "run") {
+      options.args = options.args.slice(2);
+      commandName = options.args[0];
+    }
+
+    // We are executing a WebAssembly file
+    if (commandName.indexOf("/") > -1) {
+      let modulePath = commandName;
+      if (!this.wasmFs.fs.existsSync(modulePath)) {
+        throw new Error(`No such file or directory: ${modulePath}`);
+      }
+      let wasmBinary = this.wasmFs.fs.readFileSync(modulePath);
+      let loweredBinary = await lowerI64Imports(wasmBinary);
+      COMPILED_MODULES[modulePath] = await WebAssembly.compile(loweredBinary);
+      return {
+        args: options.args,
+        module: COMPILED_MODULES[modulePath]
+      };
+    }
+
 
     // Check if the command was cached
     const cachedCommand = this._getCachedCommand(commandName);

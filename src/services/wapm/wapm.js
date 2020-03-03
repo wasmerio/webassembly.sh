@@ -210,6 +210,12 @@ export default class WAPM {
         options.args = options.args.slice(1)
       }
       commandName = options.args[0];
+
+      // This fixes the issue when doing `wasmer abc.wasm`, so it converts
+      // it to `wasmer ./abc.wasm`.
+      if (commandName.indexOf("/") == -1) {
+        commandName = `./${commandName}`;
+      }
     }
     else if (commandName == "wapm" && options.args[1] == "run") {
       options.args = options.args.slice(2);

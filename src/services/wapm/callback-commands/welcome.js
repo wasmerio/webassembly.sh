@@ -61,18 +61,17 @@ if (window.innerWidth > 800) {
     .join("\n");
 }
 
-let modifiedWelcomeMessage = ``;
-if (window.SharedArrayBuffer === undefined) {
-  welcomeMessage += `
+// if (window.SharedArrayBuffer === undefined) {
+//   welcomeMessage += `
 
-BROWSER COMPATIBILITY:
-    Your current browser does not support SharedArrayBuffer.
-    Your browser should still support more simple WASI commands, but:
-        • Infinitely looping commands ${bold}can freeze your browser${reset}
-        • Commands that require input will have a worse UX (via prompt)
-    Use the command "help" for more information.
-`;
-}
+// BROWSER COMPATIBILITY:
+//     Your current browser does not support SharedArrayBuffer.
+//     Your browser should still support more simple WASI commands, but:
+//         • Infinitely looping commands ${bold}can freeze your browser${reset}
+//         • Commands that require input will have a worse UX (via prompt)
+//     Use the command "help" for more information.
+// `;
+// }
 
 export const getWelcomeMessage = () => welcomeMessage.replace(/\n\n/g, "\n \n");
 const welcome = async () => getWelcomeMessage();

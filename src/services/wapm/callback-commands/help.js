@@ -23,7 +23,7 @@ MANAGING COMMANDS:
 
 USING PIPES:
     Command piping is supported by Webassembly.sh.
-    To Redirect the standard output to the standard input of anohter command, you would follow the normal Unix pipe syntax.
+    To Redirect the standard output to the standard input of another command, you would follow the normal Unix pipe syntax.
     
     For example, to pipe cowsay into lolcat, we could enter:
         cowsay hello | lolcat

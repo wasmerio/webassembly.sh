@@ -221,6 +221,10 @@ export default class WAPM {
       options.args = options.args.slice(2);
       commandName = options.args[0];
     }
+    else if (commandName == "wax") {
+      options.args = options.args.slice(1);
+      commandName = options.args[0];
+    }
 
     // We are executing a WebAssembly file
     if (commandName.indexOf("/") > -1) {

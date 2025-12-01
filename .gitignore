@@ -3,6 +3,8 @@ build/
 src/assets/wasm-terminal/
 src/assets/wasm-transformer/
 
+dist/
+
 # System files
 .DS_Store
 

@@ -1,0 +1,7 @@
+kind: wasmer.io/App.v0
+name: ghostty-web
+owner: wasmer
+package: .
+domains:
+- ghostty-web.wasmer.app
+app_id: da_Ko6IotJUm3o6

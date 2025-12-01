@@ -1,60 +1,28 @@
 {
-  "private": true,
-  "name": "wasm-shell",
-  "description": "PWA for the wasm-shell",
-  "keywords": [
-    "web-assembly",
-    "webassembly",
-    "wasm",
-    "web",
-    "assembly",
-    "wasi",
-    "wasmer",
-    "wasmerio",
-    "wasmfs"
-  ],
-  "version": "0.1.0",
-  "license": "MIT",
+  "name": "wasmer.sh",
+  "version": "0.0.0",
+  "description": "A bash terminal in your browser, powered by WebAssembly and WASIX.",
   "scripts": {
-    "postinstall": "npx run-s build:wasm-terminal build:wasm-transformer",
-    "build": "npx run-s build:wasm-terminal build:wasm-transformer build:preact",
-    "build:preact": "npx preact build --no-prerender",
-    "build:wasm-terminal": "npx run-s build:wasm-terminal:xterm build:wasm-terminal:workers",
-    "build:wasm-terminal:xterm": "npx cpy 'node_modules/@wasmer/wasm-terminal/lib/xterm/**/*' src/assets/wasm-terminal",
-    "build:wasm-terminal:workers": "npx cpy 'node_modules/@wasmer/wasm-terminal/lib/workers/**/*' src/assets/wasm-terminal",
-    "build:wasm-transformer": "npx cpy 'node_modules/@wasmer/wasm-transformer/lib/wasm-transformer.wasm' src/assets/wasm-transformer",
-    "dev": "npx preact watch -p 8080",
-    "serve": "npx serve -p 8080 build/",
-    "lint": "npx eslint src"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": "eslint-config-synacor"
+  "author": "",
+  "type": "module",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wasmerio/wasmer-js/issues"
   },
-  "eslintIgnore": [
-    "build/*"
-  ],
-  "devDependencies": {
-    "@babel/plugin-syntax-import-meta": "^7.2.0",
-    "copyfiles": "^2.1.1",
-    "cpy-cli": "^2.0.0",
-    "eslint": "^4.5.0",
-    "eslint-config-synacor": "^1.1.0",
-    "if-env": "^1.0.0",
-    "npm-run-all": "^4.1.5",
-    "preact-cli": "^3.0.0-rc.5",
-    "replace": "^1.1.1",
-    "serve": "^11.1.0"
+  "homepage": "https://github.com/wasmerio/wasmer-js#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wasmerio/wasmer-js.git"
   },
   "dependencies": {
-    "@wasmer/wasm-terminal": "^0.10.0",
-    "@wasmer/wasm-transformer": "^0.10.0",
-    "@wasmer/wasmfs": "^0.10.0",
-    "idb-keyval": "^3.2.0",
-    "normalize.css": "^8.0.1",
-    "preact": "^8.5.2",
-    "preact-compat": "^3.17.0",
-    "preact-render-to-string": "^4.1.0",
-    "save-file": "^2.3.1",
-    "text-table": "^0.2.0"
+    "@wasmer/sdk": "0.10.0",
+    "ghostty-web": "^0.3.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
   }
 }

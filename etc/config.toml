@@ -3,6 +3,7 @@
 
 [general]
 log-level = "info"
+port = 8080
 
 [advanced]
 

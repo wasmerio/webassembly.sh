@@ -14,4 +14,4 @@ source = "**/*.{js,mjs,html,wasm}"
 headers = { Cross-Origin-Opener-Policy = "same-origin", Cross-Origin-Embedder-Policy = "require-corp", Access-Control-Allow-Origin = "*" }
 [[advanced.headers]]
 source = "/"
-headers = { Cross-Origin-Opener-Policy = "same-origin", Cross-Origin-Embedder-Policy = "require-corp" }
+headers = { Cross-Origin-Opener-Policy = "same-origin", Cross-Origin-Embedder-Policy = "require-corp", Access-Control-Allow-Origin = "*" }

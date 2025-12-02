@@ -3,8 +3,6 @@ import { init as initGhostty, Terminal } from "ghostty-web";
 import { FitAddon } from "ghostty-web";
 // @ts-ignore
 import WasmModule from "@wasmer/sdk/wasm?url";
-// @ts-ignore
-import workerUrl from "@wasmer/sdk/worker?url";
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder("utf-8");
@@ -27,7 +25,7 @@ async function main() {
   const { Wasmer, init, Directory } = await import(sdkUrl.toString());
 
   await initGhostty();
-  await init({log: logFilter, module: WasmModule, workerUrl: workerUrl, sdkUrl: sdkUrl });
+  await init({/*log: logFilter, */module: WasmModule, sdkUrl: sdkUrl });
 
   const term = new Terminal({ cursorBlink: true, convertEol: true /* THIS DOES NOT WORK IN LIBGHOSTTY */ });
   const fit = new FitAddon();

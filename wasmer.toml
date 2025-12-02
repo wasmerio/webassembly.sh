@@ -1,6 +1,6 @@
 [package]
 name = "wasmer/ghostty-web"
-version = "0.4.21"
+version = "0.4.24"
 description = "The wasmer.sh website"
 entrypoint = "start"
 
@@ -15,5 +15,6 @@ entrypoint = "start"
 name = "start"
 module = "wasmer/static-web-server:webserver"
 runner = "wasi"
+
 [command.annotations.wasi]
 env = ["SERVER_CONFIG_FILE=/etc/static-web-server/config.toml"]
